@@ -1,5 +1,7 @@
 {
   "packages": {
+    "nodejs": "24",
+    "prek": "latest",
     "helix": "latest",
     "gh": "latest",
     "lazygit": "latest",

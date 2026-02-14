@@ -1,1 +1,5 @@
 .DS_Store
+tools/secretlint/node_modules/
+tools/secretlint/bun.lockb
+tools/secretlint/package-lock.json
+tools/secretlint/pnpm-lock.yaml

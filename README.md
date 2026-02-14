@@ -215,6 +215,21 @@ chezmoi apply          # 変更を適用
 chezmoi edit ~/.zshrc  # ファイルを編集
 ```
 
+### pre-commit（ローカル）
+
+`prek` + `secretlint` で、秘密鍵やトークンのコミットを防止できます。
+
+```bash
+# secretlint 依存（ルール含む）
+bun install --cwd tools/secretlint
+
+# git hook を導入
+prek install
+
+# (任意) 全ファイルをチェック
+prek run --all-files
+```
+
 ### カスタム関数
 
 ```bash
