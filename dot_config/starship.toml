@@ -1,0 +1,121 @@
+# =============================================================================
+# Starship プロンプト設定
+# https://starship.rs/config/
+# =============================================================================
+
+# プロンプト全体の設定
+format = """
+[](#9A348E)\
+$os\
+$username\
+[](bg:#DA627D fg:#9A348E)\
+$directory\
+[](fg:#DA627D bg:#FCA17D)\
+$git_branch\
+$git_status\
+[](fg:#FCA17D bg:#86BBD8)\
+$nodejs\
+$golang\
+$python\
+$rust\
+[](fg:#86BBD8 bg:#06969A)\
+$docker_context\
+$kubernetes\
+[](fg:#06969A bg:#33658A)\
+$time\
+[](fg:#33658A)\
+$line_break\
+$character"""
+
+# プロンプトを待つ時間
+command_timeout = 5000
+
+# 改行
+add_newline = true
+
+# OS
+[os]
+disabled = false
+style = "bg:#9A348E fg:#FFFFFF"
+
+[os.symbols]
+Macos = " "
+Ubuntu = " "
+Windows = " "
+
+# ユーザー名
+[username]
+show_always = false
+style_user = "bg:#9A348E fg:#FFFFFF"
+style_root = "bg:#9A348E fg:#FFFFFF"
+format = '[$user ]($style)'
+disabled = false
+
+# ディレクトリ
+[directory]
+style = "bg:#DA627D fg:#FFFFFF"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"Developer" = " "
+
+# Git
+[git_branch]
+symbol = ""
+style = "bg:#FCA17D fg:#000000"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "bg:#FCA17D fg:#000000"
+format = '[$all_status$ahead_behind ]($style)'
+
+# 言語・ランタイム
+[nodejs]
+symbol = ""
+style = "bg:#86BBD8 fg:#000000"
+format = '[ $symbol ($version) ]($style)'
+
+[golang]
+symbol = ""
+style = "bg:#86BBD8 fg:#000000"
+format = '[ $symbol ($version) ]($style)'
+
+[python]
+symbol = ""
+style = "bg:#86BBD8 fg:#000000"
+format = '[ $symbol ($version) ]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#86BBD8 fg:#000000"
+format = '[ $symbol ($version) ]($style)'
+
+# Docker & Kubernetes
+[docker_context]
+symbol = ""
+style = "bg:#06969A fg:#FFFFFF"
+format = '[ $symbol $context ]($style)'
+
+[kubernetes]
+disabled = false
+symbol = "☸"
+style = "bg:#06969A fg:#FFFFFF"
+format = '[ $symbol $context ]($style)'
+
+# 時刻
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:#33658A fg:#FFFFFF"
+format = '[ ♥ $time ]($style)'
+
+# 入力プロンプト
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"

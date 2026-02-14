@@ -1,0 +1,10 @@
+[mgr]
+prepend_keymap = [
+    { on = [ "g", "i" ], run = "plugin lazygit", desc = "run lazygit in current directory" },
+    { on = [ "d", "d" ], run = "remove", desc = "ゴミ箱に移動" },
+    # Zellijスプリット操作
+    { on = [ "z", "r" ], run = 'shell --orphan -- if [ -z "%h" ]; then exit 0; fi; if [ -d "%h" ]; then zellij run --direction right --close-on-exit --cwd "%h" -- bash; else zellij run --direction right --close-on-exit -- hx "%h"; fi', desc = "Zellij: 右スプリット" },
+    { on = [ "z", "d" ], run = 'shell --orphan -- if [ -z "%h" ]; then exit 0; fi; if [ -d "%h" ]; then zellij run --direction down --close-on-exit --cwd "%h" -- bash; else zellij run --direction down --close-on-exit -- hx "%h"; fi', desc = "Zellij: 下スプリット" },
+    { on = [ "z", "c" ], run = 'shell --orphan -- if [ -z "%h" ]; then exit 0; fi; if [ -d "%h" ]; then zellij run --direction right --close-on-exit -- opencode "%h"; else hx "%h"; fi', desc = "Zellij: Open Codeで開く" },
+    { on = [ "z", "a" ], run = 'shell --orphan -- if [ -z "%h" ]; then exit 0; fi; if [ -d "%h" ]; then zellij action new-tab --layout agent --cwd "%h"; else zellij action new-tab --layout agent --cwd "%d"; fi', desc = "Zellij: エージェントレイアウトで開く" }
+]

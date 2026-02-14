@@ -1,0 +1,7 @@
+* text=auto
+*.sh text eol=lf
+*.zsh text eol=lf
+*.bash text eol=lf
+*.tmpl text eol=lf
+dot_zshrc text eol=lf
+

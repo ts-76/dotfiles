@@ -1,0 +1,59 @@
+# =============================================================================
+# Zsh エントリーポイント (~/.zshrc)
+# =============================================================================
+
+# 非対話シェルでは何もしない
+[[ -o interactive ]] || return
+
+# =============================================================================
+# Nix設定 (Devbox依存)
+# =============================================================================
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+
+# =============================================================================
+# 環境変数 (exports)
+# =============================================================================
+if [ -d "$HOME/.config/zsh" ]; then
+  [ -f "$HOME/.config/zsh/exports.zsh" ] && source "$HOME/.config/zsh/exports.zsh"
+fi
+
+# =============================================================================
+# Devboxの有効化 (Global)
+# =============================================================================
+if command -v devbox > /dev/null 2>&1; then
+  eval "$(devbox global shellenv)"
+fi
+
+# =============================================================================
+# 補完設定
+# =============================================================================
+autoload -Uz compinit
+_zcompdump_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+mkdir -p "$_zcompdump_dir"
+compinit -d "$_zcompdump_dir/.zcompdump"
+unset _zcompdump_dir
+
+# =============================================================================
+# エイリアス/関数
+# =============================================================================
+if [ -d "$HOME/.config/zsh" ]; then
+  [ -f "$HOME/.config/zsh/profile.local.zsh" ] && source "$HOME/.config/zsh/profile.local.zsh"
+  [ -f "$HOME/.config/zsh/aliases.zsh" ] && source "$HOME/.config/zsh/aliases.zsh"
+  [ -f "$HOME/.config/zsh/functions.zsh" ] && source "$HOME/.config/zsh/functions.zsh"
+  [ -f "$HOME/.config/zsh/credentials.zsh" ] && source "$HOME/.config/zsh/credentials.zsh"
+fi
+
+if command -v direnv > /dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
+if command -v starship > /dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
+# zoxide must be at the end
+if command -v zoxide > /dev/null 2>&1; then
+  eval "$(zoxide init zsh --cmd cd)"
+fi

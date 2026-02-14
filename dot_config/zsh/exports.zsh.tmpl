@@ -1,0 +1,69 @@
+# =============================================================================
+# 環境変数の設定
+# =============================================================================
+
+# エディタ設定
+export EDITOR="hx"
+export VISUAL="hx"
+
+# パス設定
+path_prepend() {
+    [ -d "$1" ] || return 0
+    case ":$PATH:" in
+        *":$1:"*) ;;
+        *) PATH="$1:$PATH" ;;
+    esac
+}
+
+path_prepend "/snap/bin"           # Linux (Snap)
+path_prepend "/opt/homebrew/bin"   # macOS (Apple Silicon)
+path_prepend "$HOME/.local/bin"
+path_prepend "$HOME/bin"
+export PATH
+
+# ページャー設定
+export PAGER="less"
+export LESS="-R -F -X"
+
+# =============================================================================
+# Git切り替え用設定 (credentials.zsh で供給)
+# =============================================================================
+export GIT_MAIN_NAME="${GIT_MAIN_NAME:-}"
+export GIT_MAIN_EMAIL="${GIT_MAIN_EMAIL:-}"
+export GIT_SUB_NAME="${GIT_SUB_NAME:-}"
+export GIT_SUB_EMAIL="${GIT_SUB_EMAIL:-}"
+
+# FZF設定 (fdを使用)
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# Bun
+export BUN_INSTALL="$HOME/.bun"
+path_prepend "$BUN_INSTALL/bin"
+export PATH
+
+# Antigravity
+path_prepend "$HOME/.antigravity/antigravity/bin"
+export PATH
+
+# XDG Base Directory
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+{{- if eq .chezmoi.os "linux" }}
+# IME (日本語入力) 設定 - Fcitx5 (Linux/WSL のみ)
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+export INPUT_METHOD=fcitx
+export DefaultIMModule=fcitx
+# Fcitx5 自動起動 (WSLg)
+if command -v fcitx5 >/dev/null 2>&1; then
+    if [ -n "${WAYLAND_DISPLAY:-}" ] || [ -n "${DISPLAY:-}" ]; then
+        if ! pgrep -x fcitx5 >/dev/null 2>&1; then
+            fcitx5 -d --replace > /dev/null 2>&1
+        fi
+    fi
+fi
+{{- end }}

@@ -1,0 +1,15 @@
+# GitHub SSH
+# Key material is provided out-of-band:
+# - Work PC: generate locally (see dot_config/zsh/credentials.zsh)
+# - Private: optionally fetch via 1Password op CLI into the same path
+Host github.com github-main
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_github_main
+    IdentitiesOnly yes
+
+Host github-sub
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_github_sub
+    IdentitiesOnly yes

@@ -1,0 +1,15 @@
+[mgr]
+sort_dir_first = true
+sort_by = "natural"
+ratio = [0, 1, 2]
+show_hidden = true
+
+[opener]
+edit = [
+  { run = 'hx "$@"', block = true, desc = "helix", for = "unix" },
+]
+
+[open]
+prepend_rules = [
+  { mime = "text/*", use = "edit" },
+]

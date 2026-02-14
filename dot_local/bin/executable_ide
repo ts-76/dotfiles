@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Project selector -> zellij session launcher
+# - looks for git repos under $HOME/workspace
+# - session name: <repo>:<branch>, with '/' replaced for zellij constraints
+
+root="${IDE_ROOT:-$HOME/workspace}"
+
+selected=$(find "$root" -maxdepth 4 -name ".git" 2>/dev/null | xargs -n1 dirname | sort -u | fzf --prompt="Project > ")
+
+if [[ -z "${selected:-}" ]]; then
+    echo "No project selected"
+    exit 0
+fi
+
+project_name=$(basename "$selected")
+branch=$(cd "$selected" && git branch --show-current 2>/dev/null || echo "main")
+session_name="${project_name}:${branch//\//-}"
+
+# macOS zellij has a length limit; harmless elsewhere
+session_name="${session_name:0:30}"
+
+if [[ -n "${ZELLIJ:-}" ]]; then
+    zellij action detach
+fi
+
+cd "$selected"
+
+# Use the agent layout by default for new sessions.
+zellij attach "$session_name" 2>/dev/null || zellij -s "$session_name" --layout agent

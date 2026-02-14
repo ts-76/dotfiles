@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [ 
+    "oh-my-opencode",
+    "opencode-gemini-auth@latest",
+    "opencode-openai-codex-auth",
+    "@mohak34/opencode-notifier@latest"
+  ],
+  "theme": "tokyonight",
+  "share": "manual",
+  "formatter": {
+    "biome": {
+      "command": [
+        "bunx",
+        "biome",
+        "format",
+        "--write",
+        "$FILE"
+      ]
+    }
+  },
+  "permission": {
+    "bash": {
+      "git": "ask",
+      "rm *": "ask"
+    },
+    "external_directory": "deny",
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    }
+  }
+}

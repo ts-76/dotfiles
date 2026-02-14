@@ -1,0 +1,24 @@
+{
+  "packages": {
+    "helix": "latest",
+    "gh": "latest",
+    "lazygit": "latest",
+    "delta": "latest",
+    "ripgrep": "latest",
+    "fd": "latest",
+    "fzf": "latest",
+    "zoxide": "latest",
+    "eza": "latest",
+    "bat": "latest",
+    "yazi": "latest",
+    "yaziPlugins.lazygit": "latest",
+    "zellij": "latest",
+    "jq": "latest",
+    "yq": "latest",
+    "github-copilot-cli": "latest",
+    "opencode": "latest",
+    "bun": "latest",
+    "_1password-cli": "latest"
+  },
+  "shell": {}
+}

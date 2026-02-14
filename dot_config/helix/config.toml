@@ -1,0 +1,9 @@
+theme = "darcula-solid"
+
+[editor]
+line-number = "relative"
+
+[keys.normal]
+# Open Yazi in a Zellij floating pane and open the selected file(s) in Helix.
+# Note: `%%` is used to escape `%`.
+C-y = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/yazi-picker.sh"
