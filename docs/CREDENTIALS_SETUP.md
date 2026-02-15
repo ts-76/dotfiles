@@ -97,6 +97,11 @@ dot-github-sub-ssh-pubkey
   - `op://Personal/Git Sub Account/name`
   - `op://Personal/Git Sub Account/email`
 
+補足:
+
+- SUB を使わない場合（SUB アカウントを作らない場合）は、SUB 側のアイテムは未作成でも構いません
+  - この場合 `dot-cred-refresh` は MAIN だけ読み込み、`GIT_SUB_NAME` / `GIT_SUB_EMAIL` は空のままになります
+
 読み込み:
 
 ```bash

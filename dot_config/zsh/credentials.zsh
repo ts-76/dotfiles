@@ -15,6 +15,34 @@ _dot_has_cmd() {
   command -v "$1" >/dev/null 2>&1
 }
 
+_dot_op_read() {
+  # Read a value from 1Password and surface a helpful error on failure.
+  # Prints the value to stdout.
+  local ref out
+  ref="$1"
+  out="$(op read "$ref" 2>&1)" || {
+    print -r -- "dot-cred: op read failed: $ref" >&2
+    print -r -- "dot-cred: $out" >&2
+    return 1
+  }
+  print -r -- "$out"
+}
+
+_dot_op_read_optional() {
+  # Best-effort read from 1Password.
+  # - On success: prints the value and returns 0.
+  # - On failure: returns 0 with empty output (and logs only when verbose).
+  local ref out
+  ref="$1"
+  out="$(op read "$ref" 2>&1)" || {
+    _dot_log "dot-cred: optional op read failed: $ref"
+    _dot_log "dot-cred: $out"
+    print -r -- ""
+    return 0
+  }
+  print -r -- "$out"
+}
+
 _dot_log() {
   [[ "${DOT_CRED_VERBOSE:-0}" == "1" ]] || return 0
   print -r -- "$@" >&2
@@ -55,10 +83,11 @@ dot-cred-source-op() {
 
   # Don't prompt at startup: this is intended to be called manually.
   local main_name main_email sub_name sub_email
-  main_name="$(op read "$main_name_ref" 2>/dev/null)" || return 1
-  main_email="$(op read "$main_email_ref" 2>/dev/null)" || return 1
-  sub_name="$(op read "$sub_name_ref" 2>/dev/null)" || return 1
-  sub_email="$(op read "$sub_email_ref" 2>/dev/null)" || return 1
+  main_name="$(_dot_op_read "$main_name_ref")" || return 1
+  main_email="$(_dot_op_read "$main_email_ref")" || return 1
+  # SUB is optional; allow setups that only use MAIN.
+  sub_name="$(_dot_op_read_optional "$sub_name_ref")"
+  sub_email="$(_dot_op_read_optional "$sub_email_ref")"
 
   export GIT_MAIN_NAME="$main_name"
   export GIT_MAIN_EMAIL="$main_email"
@@ -92,13 +121,26 @@ dot-cred-refresh() {
 
   case "$backend" in
     local)
-      dot-cred-source-local
+      dot-cred-source-local || {
+        print -r -- "dot-cred-refresh: local credentials file not found: $(_dot_cred_local_file)" >&2
+        print -r -- "dot-cred-refresh: create it or set DOT_CRED_BACKEND=op" >&2
+        return 1
+      }
       ;;
     op)
-      dot-cred-source-op
+      dot-cred-source-op || {
+        print -r -- "dot-cred-refresh: failed to load from 1Password (op)" >&2
+        print -r -- "dot-cred-refresh: check sign-in (eval \"\$(op signin)\") and refs (DOT_OP_GIT_*_REF)" >&2
+        return 1
+      }
       ;;
     auto)
-      dot-cred-source-local || dot-cred-source-op
+      dot-cred-source-local || dot-cred-source-op || {
+        print -r -- "dot-cred-refresh: no credentials loaded (local file missing and op read failed)" >&2
+        print -r -- "dot-cred-refresh: local=$(_dot_cred_local_file)" >&2
+        print -r -- "dot-cred-refresh: try: DOT_CRED_BACKEND=op dot-cred-refresh" >&2
+        return 1
+      }
       ;;
     *)
       _dot_log "dot-cred-refresh: unknown DOT_CRED_BACKEND=$backend (expected: auto|local|op)"
