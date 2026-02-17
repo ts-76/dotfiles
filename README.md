@@ -97,7 +97,8 @@ dot-cred-status
 
 ## ドキュメント
 
-- 認証情報設定（1Password/ローカル）: [`docs/CREDENTIALS_SETUP.md`](./docs/CREDENTIALS_SETUP.md)
+- 認証情報設定（HTTPS運用）: [`docs/CREDENTIALS_SETUP.md`](./docs/CREDENTIALS_SETUP.md)
+- SSH運用（必要時のみ）: [`docs/CREDENTIALS_SSH_SETUP.md`](./docs/CREDENTIALS_SSH_SETUP.md)
 - キーバインド: [`docs/KEYBINDINGS.md`](./docs/KEYBINDINGS.md)
 
 ---
@@ -120,6 +121,7 @@ dot-cred-status
 ~/.local/share/chezmoi/
 ├── docs/                           # ドキュメント
 │   ├── CREDENTIALS_SETUP.md        # 認証情報設定（1Password/ローカル）
+│   ├── CREDENTIALS_SSH_SETUP.md    # SSH運用手順（必要時のみ）
 │   └── KEYBINDINGS.md              # Zellij / Yazi / Helix のキーバインド
 ├── .chezmoiignore                   # chezmoi 管理対象から除外するパス
 ├── .chezmoi.yaml.tmpl               # 初回init時にメールなどを聞く設定
@@ -135,6 +137,8 @@ dot-cred-status
 │   │   ├── credentials.zsh
 │   │   ├── exports.zsh.tmpl
 │   │   ├── functions.zsh
+│   │   ├── gh-onboard.zsh
+│   │   ├── git-account-switch.zsh
 │   │   └── profile.local.zsh.tmpl
 │   │
 │   ├── starship.toml                # プロンプト設定
@@ -194,11 +198,14 @@ dot-cred-status
 - `dot_config/zsh/aliases.zsh` - エイリアス
 - `dot_config/zsh/credentials.zsh` - 資格情報（local or 1Password）
 - `dot_config/zsh/functions.zsh` - カスタム関数
+- `dot_config/zsh/gh-onboard.zsh` - MAIN/SUBのgh認証オンボーディング（HTTPS）
+- `dot_config/zsh/git-account-switch.zsh` - repo単位でGit/ghアカウント切り替え
 - `dot_config/lazygit/config.yml` - lazygit 設定（diff パネルで delta を使用: 行番号/横並び/hyperlinks）
 - `dot_bun/install/global/package.json` - bun のグローバルパッケージ
 - `dot_local/share/devbox/global/default/devbox.json` - Devbox の導入ツール一覧
 - `private_dot_ssh/config.tmpl` - GitHub 向け SSH 設定テンプレ（鍵そのものは含めない）
-- `docs/CREDENTIALS_SETUP.md` - 認証情報設定（1Password/ローカル）の詳細手順
+- `docs/CREDENTIALS_SETUP.md` - 認証情報設定（HTTPS運用）の詳細手順
+- `docs/CREDENTIALS_SSH_SETUP.md` - SSH運用が必要な場合の手順
 - `docs/KEYBINDINGS.md` - Zellij / Yazi / Helix のキーバインドまとめ
 
 ---
@@ -236,6 +243,8 @@ prek run --all-files
 mkcd <dir>     # ディレクトリ作成 & 移動
 fe             # fzfでファイルを選択してnvimで開く
 fco            # fzfでGitブランチを選択してcheckout
+git-account-switch main  # repoローカルのgit user + ghアカウント切り替え
+dot-gh-onboard           # MAIN/SUBのghログイン確認とsetup-git
 killport 3000  # ポート3000を使用しているプロセスをkill
 extract <file> # 様々な形式のアーカイブを自動展開
 ```
