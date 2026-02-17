@@ -135,6 +135,7 @@ dot-cred-status
 │   ├── zsh/                         # zshの設定を機能別に分割
 │   │   ├── aliases.zsh
 │   │   ├── credentials.zsh
+│   │   ├── credentials.local.zsh.tmpl
 │   │   ├── exports.zsh.tmpl
 │   │   ├── functions.zsh
 │   │   ├── gh-onboard.zsh
@@ -197,6 +198,7 @@ dot-cred-status
 - `dot_config/zsh/exports.zsh.tmpl` - 環境変数
 - `dot_config/zsh/aliases.zsh` - エイリアス
 - `dot_config/zsh/credentials.zsh` - 資格情報（local or 1Password）
+- `dot_config/zsh/credentials.local.zsh.tmpl` - local認証情報ファイルのテンプレート
 - `dot_config/zsh/functions.zsh` - カスタム関数
 - `dot_config/zsh/gh-onboard.zsh` - MAIN/SUBのgh認証オンボーディング（HTTPS）
 - `dot_config/zsh/git-account-switch.zsh` - repo単位でGit/ghアカウント切り替え

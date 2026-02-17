@@ -20,7 +20,7 @@
 使うファイル/仕組み:
 
 - `~/.config/zsh/profile.local.zsh`（chezmoi生成）: PCごとの既定（private/work）
-- `~/.config/zsh/credentials.local.zsh`（手元で作成）: ローカル管理時の `GIT_MAIN_*` / `GIT_SUB_*`
+- `~/.config/zsh/credentials.local.zsh`（chezmoi生成）: ローカル管理時の `GIT_MAIN_*` / `GIT_SUB_*`
 - `~/.config/zsh/credentials.zsh`: `DOT_PROFILE` に応じて local / 1Password の取得元を切り替え
 
 ## chezmoi init時の設定
@@ -46,9 +46,9 @@ chezmoi apply
 
 ### Work PC（ローカル方式）
 
-以下のファイルを手元で作成してください（chezmoi管理外）。
+`~/.config/zsh/credentials.local.zsh` は `chezmoi init` で入力した値から自動生成されます。
 
-`~/.config/zsh/credentials.local.zsh`:
+内容の例:
 
 ```sh
 export GIT_MAIN_NAME="Your Name"
@@ -56,6 +56,8 @@ export GIT_MAIN_EMAIL="you@example.com"
 export GIT_SUB_NAME="Sub Name"
 export GIT_SUB_EMAIL="you@sub.example"
 ```
+
+後から値を変える場合は、`chezmoi` のデータを更新して再適用するか、`chezmoi edit ~/.config/zsh/credentials.local.zsh` で編集してください。
 
 ### Private PC（1Password方式）
 

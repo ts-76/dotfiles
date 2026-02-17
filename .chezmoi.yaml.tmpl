@@ -1,7 +1,21 @@
 {{- $email := promptStringOnce . "email" "メールアドレスを入力してください" -}}
 {{- $name := promptStringOnce . "name" "名前を入力してください" -}}
+{{- $gitMainNameInput := promptStringOnce . "dot_git_main_name" "Git MAIN の user.name を入力してください（空なら上記の名前を利用）" -}}
+{{- $gitMainEmailInput := promptStringOnce . "dot_git_main_email" "Git MAIN の user.email を入力してください（空なら上記のメールを利用）" -}}
+{{- $gitSubName := promptStringOnce . "dot_git_sub_name" "(任意) Git SUB の user.name を入力してください（空ならスキップ）" -}}
+{{- $gitSubEmail := promptStringOnce . "dot_git_sub_email" "(任意) Git SUB の user.email を入力してください（空ならスキップ）" -}}
 {{- $dotProfile := promptStringOnce . "dot_profile" "このPCのプロファイルを入力してください (private/work)" -}}
 {{- $dotWorkspaceCreateAnswer := promptStringOnce . "dot_workspace_create" "Workspaceフォルダ（~/workspace/personal と ~/workspace/work）を作成しますか？ (y/N)" -}}
+
+{{- $gitMainName := $gitMainNameInput -}}
+{{- if eq (trim $gitMainName) "" -}}
+{{-   $gitMainName = $name -}}
+{{- end -}}
+
+{{- $gitMainEmail := $gitMainEmailInput -}}
+{{- if eq (trim $gitMainEmail) "" -}}
+{{-   $gitMainEmail = $email -}}
+{{- end -}}
 
 {{- /*
   1Password SSH key reference inputs.
@@ -41,6 +55,10 @@
 data:
   email: {{ $email | quote }}
   name: {{ $name | quote }}
+  dot_git_main_name: {{ $gitMainName | quote }}
+  dot_git_main_email: {{ $gitMainEmail | quote }}
+  dot_git_sub_name: {{ $gitSubName | quote }}
+  dot_git_sub_email: {{ $gitSubEmail | quote }}
   dot_profile: {{ $dotProfile | quote }}
   dot_workspace_create: {{ $dotWorkspaceCreate }}
   dot_op_github_main_ssh_vault_id: {{ $dotOpGithubMainVaultID | quote }}
