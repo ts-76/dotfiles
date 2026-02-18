@@ -3,6 +3,9 @@ theme = "darcula-solid"
 [editor]
 line-number = "relative"
 
+[editor.auto-save]
+after-delay.enable = true
+
 [keys.normal]
 # Open Yazi in a Zellij floating pane and open the selected file(s) in Helix.
 # Note: `%%` is used to escape `%`.
