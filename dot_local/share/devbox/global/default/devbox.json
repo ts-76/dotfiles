@@ -10,6 +10,8 @@
     "fd": "latest",
     "fzf": "latest",
     "zoxide": "latest",
+    "direnv": "latest",
+    "starship": "latest",
     "eza": "latest",
     "bat": "latest",
     "yazi": "latest",

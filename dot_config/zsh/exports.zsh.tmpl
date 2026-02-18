@@ -53,6 +53,22 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 
+# WSL 判定
+dot-is-wsl() {
+    [ -n "${WSL_INTEROP:-}" ] && return 0
+    [ -n "${WSL_DISTRO_NAME:-}" ] && return 0
+    if [ -r /proc/version ] && command grep -qi microsoft /proc/version 2>/dev/null; then
+        return 0
+    fi
+    return 1
+}
+
+if dot-is-wsl; then
+    export DOT_IS_WSL=1
+else
+    export DOT_IS_WSL=0
+fi
+
 {{- if eq .chezmoi.os "linux" }}
 # IME (日本語入力) 設定 - Fcitx5 (Linux/WSL のみ)
 export GTK_IM_MODULE=fcitx
@@ -60,11 +76,23 @@ export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 export INPUT_METHOD=fcitx
 export DefaultIMModule=fcitx
-# Fcitx5 自動起動 (WSLg)
-if command -v fcitx5 >/dev/null 2>&1; then
-    if [ -n "${WAYLAND_DISPLAY:-}" ] || [ -n "${DISPLAY:-}" ]; then
-        if ! pgrep -x fcitx5 >/dev/null 2>&1; then
-            fcitx5 -d --replace > /dev/null 2>&1
+# Fcitx5 自動起動
+if [ "${DOT_IS_WSL}" = "1" ]; then
+    # WSLg では表示サーバがある場合のみ起動
+    if command -v fcitx5 >/dev/null 2>&1; then
+        if [ -n "${WAYLAND_DISPLAY:-}" ] || [ -n "${DISPLAY:-}" ]; then
+            if ! pgrep -x fcitx5 >/dev/null 2>&1; then
+                fcitx5 -d --replace > /dev/null 2>&1
+            fi
+        fi
+    fi
+else
+    # 純粋な Linux でも GUI セッション時は起動
+    if command -v fcitx5 >/dev/null 2>&1; then
+        if [ -n "${WAYLAND_DISPLAY:-}" ] || [ -n "${DISPLAY:-}" ]; then
+            if ! pgrep -x fcitx5 >/dev/null 2>&1; then
+                fcitx5 -d --replace > /dev/null 2>&1
+            fi
         fi
     fi
 fi
