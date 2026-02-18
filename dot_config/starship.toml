@@ -22,7 +22,7 @@ $rust\
 $docker_context\
 $kubernetes\
 [](fg:#06969A bg:#33658A)\
-$time\
+${custom.git_user}\
 [](fg:#33658A)\
 $line_break\
 $character"""
@@ -67,13 +67,24 @@ truncation_symbol = "…/"
 
 # Git
 [git_branch]
-symbol = ""
+symbol = "git:"
 style = "bg:#FCA17D fg:#000000"
-format = '[ $symbol $branch ]($style)'
+format = '[ $symbol$branch ]($style)'
 
 [git_status]
 style = "bg:#FCA17D fg:#000000"
-format = '[$all_status$ahead_behind ]($style)'
+format = '[ $all_status$ahead_behind ]($style)'
+conflicted = "C"
+ahead = "A"
+behind = "B"
+diverged = "X"
+up_to_date = ""
+untracked = "?"
+stashed = "S"
+modified = "M"
+staged = "+"
+renamed = "R"
+deleted = "D"
 
 # 言語・ランタイム
 [nodejs]
@@ -108,12 +119,11 @@ symbol = "☸"
 style = "bg:#06969A fg:#FFFFFF"
 format = '[ $symbol $context ]($style)'
 
-# 時刻
-[time]
-disabled = false
-time_format = "%R"
+[custom.git_user]
+command = "git config --get user.name"
+when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1"
 style = "bg:#33658A fg:#FFFFFF"
-format = '[ ♥ $time ]($style)'
+format = '[ 👤 $output ]($style)'
 
 # 入力プロンプト
 [character]

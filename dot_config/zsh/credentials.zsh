@@ -43,8 +43,10 @@ dot-cred-status() {
   print -r -- "DOT_CRED_LOCAL_FILE=$f"
   print -r -- "GIT_MAIN_NAME=${GIT_MAIN_NAME:-}"
   print -r -- "GIT_MAIN_EMAIL=${GIT_MAIN_EMAIL:-}"
+  print -r -- "GITHUB_MAIN_USERNAME=${GITHUB_MAIN_USERNAME:-}"
   print -r -- "GIT_SUB_NAME=${GIT_SUB_NAME:-}"
   print -r -- "GIT_SUB_EMAIL=${GIT_SUB_EMAIL:-}"
+  print -r -- "GITHUB_SUB_USERNAME=${GITHUB_SUB_USERNAME:-}"
 }
 
 _dot_github_main_key_path() {

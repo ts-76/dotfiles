@@ -2,6 +2,7 @@ dot-gh-onboard() {
     local setup_git="true"
     local account
     local gh_user
+    local gh_user_var
     local name_var
     local email_var
 
@@ -18,8 +19,9 @@ Usage:
 
 Flow:
   1) Validate MAIN/SUB git name/email variables
-  2) Confirm gh login for MAIN/SUB (login when missing)
-  3) Configure gh credential helper for HTTPS (unless --skip-setup-git)
+  2) Use GITHUB_MAIN_USERNAME / GITHUB_SUB_USERNAME when available
+  3) Confirm gh login for MAIN/SUB (login when missing)
+  4) Configure gh credential helper for HTTPS (unless --skip-setup-git)
 EOF
                 return 0
                 ;;
@@ -43,9 +45,11 @@ EOF
         if [[ "$account" == "main" ]]; then
             name_var="${GIT_MAIN_NAME:-}"
             email_var="${GIT_MAIN_EMAIL:-}"
+            gh_user_var="${GITHUB_MAIN_USERNAME:-}"
         else
             name_var="${GIT_SUB_NAME:-}"
             email_var="${GIT_SUB_EMAIL:-}"
+            gh_user_var="${GITHUB_SUB_USERNAME:-}"
         fi
 
         if [[ -z "$name_var" || -z "$email_var" ]]; then
@@ -53,7 +57,10 @@ EOF
             continue
         fi
 
-        read -r "gh_user?GitHub username for ${account^^} (empty to skip): "
+        gh_user="$gh_user_var"
+        if [[ -z "$gh_user" ]]; then
+            read -r "gh_user?GitHub username for ${(U)account} (empty to skip): "
+        fi
 
         if [[ -z "$gh_user" ]]; then
             echo "Skip $account: GitHub username is not provided."

@@ -74,7 +74,7 @@ chezmoi apply
 ### 2) 認証情報の設定（任意）
 
 - 認証情報は [`docs/CREDENTIALS_SETUP.md`](./docs/CREDENTIALS_SETUP.md) に集約しています
-- 初期化時の質問で `GIT_MAIN_*` / `GIT_SUB_*` 用データを設定し、`~/.config/zsh/credentials.local.zsh` が生成されます
+- 初期化時の質問で `GIT_MAIN_*` / `GIT_SUB_*` を設定し、`~/.config/zsh/credentials.local.zsh` が生成されます（`GITHUB_*_USERNAME` は `GIT_*_NAME` と同値）
 - Workspaceフォルダ作成（`~/workspace/personal` / `~/workspace/work`）はスキップ可能です
 
 ### 3) 確認
@@ -137,6 +137,7 @@ dot-cred-status
 │   │   ├── exports.zsh.tmpl
 │   │   ├── functions.zsh
 │   │   ├── gh-onboard.zsh
+│   │   ├── git-account-auto.zsh
 │   │   ├── git-account-switch.zsh
 │   │   └── profile.local.zsh.tmpl
 │   │
@@ -198,6 +199,7 @@ dot-cred-status
 - `dot_config/zsh/credentials.local.zsh.tmpl` - local認証情報ファイルのテンプレート
 - `dot_config/zsh/functions.zsh` - カスタム関数
 - `dot_config/zsh/gh-onboard.zsh` - MAIN/SUBのgh認証オンボーディング（HTTPS）
+- `dot_config/zsh/git-account-auto.zsh` - repo単位でmain/subを自動判定し、direnv連携で適用
 - `dot_config/zsh/git-account-switch.zsh` - repo単位でGit/ghアカウント切り替え
 - `dot_config/lazygit/config.yml` - lazygit 設定（diff パネルで delta を使用: 行番号/横並び/hyperlinks）
 - `dot_bun/install/global/package.json` - bun のグローバルパッケージ
@@ -243,6 +245,8 @@ mkcd <dir>     # ディレクトリ作成 & 移動
 fe             # fzfでファイルを選択してnvimで開く
 fco            # fzfでGitブランチを選択してcheckout
 git-account-switch main  # repoローカルのgit user + ghアカウント切り替え
+git-account-bind main    # repoをmainに固定 + .envrc生成
+git-account-auto            # repo設定から自動判定して適用
 dot-gh-onboard           # MAIN/SUBのghログイン確認とsetup-git
 killport 3000  # ポート3000を使用しているプロセスをkill
 extract <file> # 様々な形式のアーカイブを自動展開
