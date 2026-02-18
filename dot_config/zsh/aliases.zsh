@@ -71,7 +71,7 @@ fi
 
 # Zellij (ターミナルマルチプレクサ)
 if command -v zellij > /dev/null 2>&1; then
-    alias zj="zellij"
+    alias zj="zellij attach main --create"
     alias zja="zellij a"
     alias zjl="zellij ls"
     alias zjk="zellij k"
