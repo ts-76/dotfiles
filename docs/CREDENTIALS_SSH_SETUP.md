@@ -10,8 +10,6 @@
 
 ## 鍵の準備
 
-### Work PC（ローカル生成）
-
 ```bash
 dot-github-main-ssh-key-ensure --source gen
 dot-github-main-ssh-pubkey
@@ -21,18 +19,6 @@ dot-github-sub-ssh-pubkey
 ```
 
 表示した公開鍵を、対応するGitHubアカウントに登録します。
-
-### Private PC（1Passwordから取得）
-
-```bash
-eval "$(op signin)"
-
-dot-github-main-ssh-key-ensure --source op
-dot-github-main-ssh-pubkey
-
-dot-github-sub-ssh-key-ensure --source op
-dot-github-sub-ssh-pubkey
-```
 
 ## SSH接続確認
 

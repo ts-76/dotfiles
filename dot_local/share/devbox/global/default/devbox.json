@@ -19,8 +19,7 @@
     "yq": "latest",
     "github-copilot-cli": "latest",
     "opencode": "latest",
-    "bun": "latest",
-    "_1password-cli": "latest"
+    "bun": "latest"
   },
   "shell": {}
 }

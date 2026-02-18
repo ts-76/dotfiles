@@ -24,12 +24,12 @@ MacとWindows (WSL2) で**同じコマンド、同じバージョン、同じ設
 
 ## 特徴
 
-- 🚀 **2段階セットアップ** - 基本環境 → 認証情報設定（1Password/ローカル）で完全運用
+- 🚀 **2段階セットアップ** - 基本環境 → 認証情報設定（HTTPS + gh）で完全運用
 - 🔄 **クロスプラットフォーム** - Mac / Linux / WSL2 で同じ環境
 - 📦 **再現性の保証** - Devbox (Nix) によるバージョン固定
 - 🎨 **モダンなツールセット** - starship, eza, bat, fzf など
 - 🔧 **モジュール設計** - 機能別に分割された設定ファイル
-- 🔐 **認証情報設定** - Git/SSH/gh を Private/Work で切り替え可能
+- 🔐 **認証情報設定** - Git/gh を MAIN/SUB で切り替え可能
 
 ---
 
@@ -48,7 +48,6 @@ MacとWindows (WSL2) で**同じコマンド、同じバージョン、同じ設
 
 - **direnv** - `.envrc` を自動読み込みしたい場合
 - **starship** - プロンプトを有効化したい場合
-- **1Password** - `dot_profile=private` で 1Password から認証情報/SSH鍵を取得したい場合（`op` は Devbox から導入）
 
 ---
 
@@ -74,10 +73,9 @@ chezmoi apply
 
 ### 2) 認証情報の設定（任意）
 
-- Private PC（1Password）/ Work PC（ローカル）のどちらも [`docs/CREDENTIALS_SETUP.md`](./docs/CREDENTIALS_SETUP.md) に集約しています
-- 初期化時の質問（`dot_profile` など）により `~/.config/zsh/profile.local.zsh` が生成されます
-  - Private では、GitHub SSH鍵を 1Password から取得するための vault-id / item-id を入力できます
-  - Workspaceフォルダ作成（`~/workspace/personal` / `~/workspace/work`）はスキップ可能です
+- 認証情報は [`docs/CREDENTIALS_SETUP.md`](./docs/CREDENTIALS_SETUP.md) に集約しています
+- 初期化時の質問で `GIT_MAIN_*` / `GIT_SUB_*` 用データを設定し、`~/.config/zsh/credentials.local.zsh` が生成されます
+- Workspaceフォルダ作成（`~/workspace/personal` / `~/workspace/work`）はスキップ可能です
 
 ### 3) 確認
 
@@ -120,7 +118,7 @@ dot-cred-status
 ```text
 ~/.local/share/chezmoi/
 ├── docs/                           # ドキュメント
-│   ├── CREDENTIALS_SETUP.md        # 認証情報設定（1Password/ローカル）
+│   ├── CREDENTIALS_SETUP.md        # 認証情報設定（HTTPS運用）
 │   ├── CREDENTIALS_SSH_SETUP.md    # SSH運用手順（必要時のみ）
 │   └── KEYBINDINGS.md              # Zellij / Yazi / Helix のキーバインド
 ├── .chezmoiignore                   # chezmoi 管理対象から除外するパス
@@ -184,7 +182,6 @@ dot-cred-status
 - **jq** - JSONプロセッサ
 - **yq** - YAMLプロセッサ
 - **bun** - 高速JavaScriptランタイム
-- **1password-cli** - 1Password CLI
 
 ### AI
 - **github-copilot-cli** - GitHub Copilot CLI
@@ -197,7 +194,7 @@ dot-cred-status
 - `dot_zshrc` - Zsh のエントリーポイント
 - `dot_config/zsh/exports.zsh.tmpl` - 環境変数
 - `dot_config/zsh/aliases.zsh` - エイリアス
-- `dot_config/zsh/credentials.zsh` - 資格情報（local or 1Password）
+- `dot_config/zsh/credentials.zsh` - 資格情報（localファイル）
 - `dot_config/zsh/credentials.local.zsh.tmpl` - local認証情報ファイルのテンプレート
 - `dot_config/zsh/functions.zsh` - カスタム関数
 - `dot_config/zsh/gh-onboard.zsh` - MAIN/SUBのgh認証オンボーディング（HTTPS）
@@ -264,4 +261,3 @@ MIT
 - [chezmoi](https://www.chezmoi.io/)
 - [Devbox](https://www.jetpack.io/devbox/)
 - [Starship](https://starship.rs/)
-- [1Password CLI](https://developer.1password.com/docs/cli/)

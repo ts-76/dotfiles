@@ -124,8 +124,8 @@ EOF
         else
             echo "SUB credentials are not set (GIT_SUB_NAME/GIT_SUB_EMAIL)." >&2
         fi
-        echo "- Local: create ~/.config/zsh/credentials.local.zsh" >&2
-        echo "- Private: run 'eval \"\$(op signin)\"' then 'dot-cred-refresh'" >&2
+        echo "- Run: chezmoi apply" >&2
+        echo "- Or edit: ~/.config/zsh/credentials.local.zsh" >&2
         return 1
     fi
 

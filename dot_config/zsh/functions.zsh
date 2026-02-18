@@ -92,8 +92,8 @@ gsub() {
     fi
     if [ -z "${GIT_SUB_NAME:-}" ] || [ -z "${GIT_SUB_EMAIL:-}" ]; then
         echo "SUB credentials are not set (GIT_SUB_NAME/GIT_SUB_EMAIL)." >&2
-        echo "- Local: create ~/.config/zsh/credentials.local.zsh" >&2
-        echo "- 1Password: run 'eval \"\$(op signin)\"' then 'dot-cred-refresh'" >&2
+        echo "- Run: chezmoi apply" >&2
+        echo "- Or edit: ~/.config/zsh/credentials.local.zsh" >&2
         return 1
     fi
     git config user.name "$GIT_SUB_NAME"
@@ -109,8 +109,8 @@ gmain() {
     fi
     if [ -z "${GIT_MAIN_NAME:-}" ] || [ -z "${GIT_MAIN_EMAIL:-}" ]; then
         echo "MAIN credentials are not set (GIT_MAIN_NAME/GIT_MAIN_EMAIL)." >&2
-        echo "- Local: create ~/.config/zsh/credentials.local.zsh" >&2
-        echo "- Private: run 'eval \"\$(op signin)\"' then 'dot-cred-refresh'" >&2
+        echo "- Run: chezmoi apply" >&2
+        echo "- Or edit: ~/.config/zsh/credentials.local.zsh" >&2
         return 1
     fi
     git config user.name "$GIT_MAIN_NAME"

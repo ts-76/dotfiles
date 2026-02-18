@@ -4,7 +4,6 @@
 {{- $gitMainEmailInput := promptStringOnce . "dot_git_main_email" "Git MAIN の user.email を入力してください（空なら上記のメールを利用）" -}}
 {{- $gitSubName := promptStringOnce . "dot_git_sub_name" "(任意) Git SUB の user.name を入力してください（空ならスキップ）" -}}
 {{- $gitSubEmail := promptStringOnce . "dot_git_sub_email" "(任意) Git SUB の user.email を入力してください（空ならスキップ）" -}}
-{{- $dotProfile := promptStringOnce . "dot_profile" "このPCのプロファイルを入力してください (private/work)" -}}
 {{- $dotWorkspaceCreateAnswer := promptStringOnce . "dot_workspace_create" "Workspaceフォルダ（~/workspace/personal と ~/workspace/work）を作成しますか？ (y/N)" -}}
 
 {{- $gitMainName := $gitMainNameInput -}}
@@ -17,39 +16,12 @@
 {{-   $gitMainEmail = $email -}}
 {{- end -}}
 
-{{- /*
-  1Password SSH key reference inputs.
-
-  Preferred (stable): use vault-id / item-id and let templates construct the OpenSSH-formatted ref.
-    op://<vault-id>/<item-id>/private key?ssh-format=openssh
-*/ -}}
-{{- $dotOpGithubMainVaultID := promptStringOnce . "dot_op_github_main_ssh_vault_id" "(privateのみ/任意) GitHub MAIN SSH鍵の1Password vault-id (例: qe3... ). 空ならスキップ" -}}
-{{- $dotOpGithubMainItemID := promptStringOnce . "dot_op_github_main_ssh_item_id" "(privateのみ/任意) GitHub MAIN SSH鍵の1Password item-id (例: v2n... ). 空ならスキップ" -}}
-{{- $dotOpGithubSubVaultID := promptStringOnce . "dot_op_github_sub_ssh_vault_id" "(privateのみ/任意) GitHub SUB SSH鍵の1Password vault-id (例: qe3... ). 空ならスキップ" -}}
-{{- $dotOpGithubSubItemID := promptStringOnce . "dot_op_github_sub_ssh_item_id" "(privateのみ/任意) GitHub SUB SSH鍵の1Password item-id (例: v2n... ). 空ならスキップ" -}}
-
-{{- $dotCredBackend := "auto" -}}
-{{- $dotGithubSshSource := "auto" -}}
+{{- $dotGithubSshSource := "local" -}}
 {{- $dotWorkspaceCreate := false -}}
 
 {{- $ans := lower (trim $dotWorkspaceCreateAnswer) -}}
 {{- if or (eq $ans "y") (eq $ans "yes") (eq $ans "true") (eq $ans "1") -}}
 {{-   $dotWorkspaceCreate = true -}}
-{{- end -}}
-
-{{- if eq $dotProfile "private" -}}
-{{-   $dotCredBackend = "op" -}}
-{{-   $dotGithubSshSource = "op" -}}
-{{- else if eq $dotProfile "work" -}}
-{{-   $dotCredBackend = "local" -}}
-{{-   $dotGithubSshSource = "local" -}}
-{{- end -}}
-
-{{- /* 1Password統合: op CLIがインストールされているか確認 */ -}}
-{{- $onepasswordEnabled := false -}}
-{{- $opPath := lookPath "op" -}}
-{{- if or $opPath (stat "/snap/bin/op") (stat "/usr/bin/op") (stat "/usr/local/bin/op") -}}
-{{-   $onepasswordEnabled = true -}}
 {{- end -}}
 
 data:
@@ -59,13 +31,5 @@ data:
   dot_git_main_email: {{ $gitMainEmail | quote }}
   dot_git_sub_name: {{ $gitSubName | quote }}
   dot_git_sub_email: {{ $gitSubEmail | quote }}
-  dot_profile: {{ $dotProfile | quote }}
   dot_workspace_create: {{ $dotWorkspaceCreate }}
-  dot_op_github_main_ssh_vault_id: {{ $dotOpGithubMainVaultID | quote }}
-  dot_op_github_main_ssh_item_id: {{ $dotOpGithubMainItemID | quote }}
-  dot_op_github_sub_ssh_vault_id: {{ $dotOpGithubSubVaultID | quote }}
-  dot_op_github_sub_ssh_item_id: {{ $dotOpGithubSubItemID | quote }}
-  dot_cred_backend: {{ $dotCredBackend | quote }}
   dot_github_ssh_source: {{ $dotGithubSshSource | quote }}
-  onepassword:
-    enabled: {{ $onepasswordEnabled }}

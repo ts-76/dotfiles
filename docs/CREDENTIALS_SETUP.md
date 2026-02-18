@@ -1,54 +1,30 @@
 # 認証情報設定（HTTPS運用）
 
-このドキュメントは、Private/WorkのPC差分を維持しつつ、GitHub連携をHTTPS + `gh` で運用する手順をまとめています。
+このドキュメントは、GitHub連携を HTTPS + `gh` で運用する手順をまとめています。
 
 ## 目次
 
-- [使い分けの概要](#使い分けの概要)
 - [chezmoi init時の設定](#chezmoi-init時の設定)
-- [Git認証情報（MAIN/SUB）](#git認証情報mainsub)
+- [生成されるGit認証情報ファイル](#生成されるgit認証情報ファイル)
 - [gh 認証セットアップ（HTTPS）](#gh-認証セットアップhttps)
 - [Gitユーザー/ghアカウントの切り替え](#gitユーザーghアカウントの切り替え)
 - [セキュリティ注意点](#セキュリティ注意点)
 - [(任意) SSH運用が必要な場合](#任意-ssh運用が必要な場合)
 
-## 使い分けの概要
-
-- PCの種類: `private` / `work`（どこから認証情報を読むか）
-- アカウント: `MAIN` / `SUB`（gitの `user.name` / `user.email` を切り替えるための区分）
-
-使うファイル/仕組み:
-
-- `~/.config/zsh/profile.local.zsh`（chezmoi生成）: PCごとの既定（private/work）
-- `~/.config/zsh/credentials.local.zsh`（chezmoi生成）: ローカル管理時の `GIT_MAIN_*` / `GIT_SUB_*`
-- `~/.config/zsh/credentials.zsh`: `DOT_PROFILE` に応じて local / 1Password の取得元を切り替え
-
 ## chezmoi init時の設定
 
-初回の `chezmoi init --apply` で以下が質問されます。
+初回の `chezmoi init --apply` で以下を入力します。
 
-- `dot_profile`: `private` / `work`
-- `dot_workspace_create`: `y` / `n`（workspaceフォルダを作成するか）
-- (privateのみ/任意) GitHub SSH鍵用の 1Password vault-id / item-id
+- `name` / `email`
+- `dot_git_main_name` / `dot_git_main_email`（空なら `name` / `email` を利用）
+- `dot_git_sub_name` / `dot_git_sub_email`（任意）
+- `dot_workspace_create`（workspaceフォルダを作成するか）
 
-生成物:
+## 生成されるGit認証情報ファイル
 
-- `~/.config/zsh/profile.local.zsh`
+`~/.config/zsh/credentials.local.zsh` は chezmoi が自動生成します。
 
-後から変更したい場合:
-
-```bash
-chezmoi edit ~/.config/zsh/profile.local.zsh
-chezmoi apply
-```
-
-## Git認証情報（MAIN/SUB）
-
-### Work PC（ローカル方式）
-
-`~/.config/zsh/credentials.local.zsh` は `chezmoi init` で入力した値から自動生成されます。
-
-内容の例:
+例:
 
 ```sh
 export GIT_MAIN_NAME="Your Name"
@@ -57,20 +33,15 @@ export GIT_SUB_NAME="Sub Name"
 export GIT_SUB_EMAIL="you@sub.example"
 ```
 
-後から値を変える場合は、`chezmoi` のデータを更新して再適用するか、`chezmoi edit ~/.config/zsh/credentials.local.zsh` で編集してください。
+値を変更する場合:
 
-### Private PC（1Password方式）
+```bash
+chezmoi apply
+# または
+chezmoi edit ~/.config/zsh/credentials.local.zsh
+```
 
-1Passwordに以下の値を保存します。
-
-- MAIN
-  - `op://Personal/Git Main Account/name`
-  - `op://Personal/Git Main Account/email`
-- SUB
-  - `op://Personal/Git Sub Account/name`
-  - `op://Personal/Git Sub Account/email`
-
-読み込み確認（Work/Private共通）:
+確認:
 
 ```bash
 dot-cred-refresh
@@ -78,8 +49,6 @@ dot-cred-status
 ```
 
 ## gh 認証セットアップ（HTTPS）
-
-まず `gh` をHTTPS運用でログインします。
 
 ```bash
 gh auth login --hostname github.com --git-protocol https --web
