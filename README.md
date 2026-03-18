@@ -87,6 +87,17 @@ git config --global user.email
 dot-cred-status
 ```
 
+### シェル起動方針（bash → zsh）
+
+この dotfiles では **zsh を標準シェル** とし、Bash 側は最小限に保ちます。
+
+- `~/.bash_profile` は `~/.bashrc` を読むだけ
+- `~/.profile` は Bash 利用時のみ `~/.bashrc` に処理を委譲
+- `~/.bashrc` は非対話シェルでは何もせず、対話時は `zsh` に委譲
+- 重い初期化（補完、プロンプト、shell hook, Devbox など）は `~/.zshrc` 側に集約
+
+これにより、WSL2 で Bash と Zsh の初期化が重複して起動が遅くなるのを防ぎます。
+
 ---
 
 ## ドキュメント
@@ -120,6 +131,9 @@ dot-cred-status
 ├── .chezmoiignore                   # chezmoi 管理対象から除外するパス
 ├── .chezmoi.yaml.tmpl               # 初回init時にメールなどを聞く設定
 │
+├── dot_bash_profile                 # Bash ログインシェル設定（~/.bash_profile → ~/.bashrc）
+├── dot_bashrc                       # Bash は最小限にして対話時は zsh に委譲
+├── dot_profile                      # POSIX プロファイル（Bash 利用時は ~/.bashrc に委譲）
 ├── dot_zshrc                        # Zsh の設定 (~/.zshrc)
 │
 ├── dot_bun/                         # bun のグローバル設定
@@ -192,6 +206,9 @@ dot-cred-status
 ## 主要ファイルの説明
 
 ### 設定ファイル
+- `dot_bash_profile` - Bash ログインシェル設定。`~/.bashrc` を読むだけに限定
+- `dot_bashrc` - Bash のエントリーポイント。非対話シェルでは何もせず、対話時は zsh に委譲
+- `dot_profile` - POSIX プロファイル。Bash 利用時のみ `~/.bashrc` に処理を委譲
 - `dot_zshrc` - Zsh のエントリーポイント
 - `dot_config/zsh/exports.zsh.tmpl` - 環境変数（`DOT_IS_WSL` 判定を含む）
 - `dot_config/zsh/aliases.zsh` - エイリアス
