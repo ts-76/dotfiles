@@ -26,6 +26,7 @@ MacとWindows (WSL2) で**同じコマンド、同じバージョン、同じ設
 
 - 🚀 **2段階セットアップ** - 基本環境 → 認証情報設定（HTTPS + gh）で完全運用
 - 🔄 **クロスプラットフォーム** - Mac / Linux / WSL2 で同じ環境
+- 🐧 **WSL最適化** - `DOT_IS_WSL` を自動判定し、WSLとLinuxで実行時分岐
 - 📦 **再現性の保証** - Devbox (Nix) によるバージョン固定
 - 🎨 **モダンなツールセット** - starship, eza, bat, fzf など
 - 🔧 **モジュール設計** - 機能別に分割された設定ファイル
@@ -43,11 +44,6 @@ MacとWindows (WSL2) で**同じコマンド、同じバージョン、同じ設
 - **nix** - Devbox のバックエンド（WSL2/Linux/Mac いずれも必要）
 - **devbox** - ツールのバージョン管理（`devbox global shellenv` を利用）
 - **zsh** - このdotfilesの標準シェル
-
-任意（使う場合のみ）:
-
-- **direnv** - `.envrc` を自動読み込みしたい場合
-- **starship** - プロンプトを有効化したい場合
 
 ---
 
@@ -170,6 +166,10 @@ dot-cred-status
 - **fd** - 高速find
 - **fzf** - ファジーファインダー
 - **zoxide** - スマートcd
+- **direnv** - `.envrc` の自動読み込み
+
+### シェル体験
+- **starship** - クロスシェル対応プロンプト
 
 ### ファイル操作
 - **eza** - モダンなls
@@ -193,7 +193,7 @@ dot-cred-status
 
 ### 設定ファイル
 - `dot_zshrc` - Zsh のエントリーポイント
-- `dot_config/zsh/exports.zsh.tmpl` - 環境変数
+- `dot_config/zsh/exports.zsh.tmpl` - 環境変数（`DOT_IS_WSL` 判定を含む）
 - `dot_config/zsh/aliases.zsh` - エイリアス
 - `dot_config/zsh/credentials.zsh` - 資格情報（localファイル）
 - `dot_config/zsh/credentials.local.zsh.tmpl` - local認証情報ファイルのテンプレート
