@@ -4,6 +4,7 @@
     "prek": "latest",
     "helix": "latest",
     "gh": "latest",
+    "ghq": "latest",
     "lazygit": "latest",
     "delta": "latest",
     "ripgrep": "latest",
