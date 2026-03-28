@@ -11,7 +11,7 @@
     "fd": "latest",
     "fzf": "latest",
     "zoxide": "latest",
-    "direnv": "latest",
+    "direnv": "2.36.0",
     "starship": "latest",
     "eza": "latest",
     "bat": "latest",
