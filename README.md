@@ -64,6 +64,7 @@ chezmoi apply
 
 この段階で以下がセットアップされます：
 - ✅ dotfiles の配置（zsh / starship / helix / yazi / zellij / lazygit / opencode など）
+- ✅ Bun global パッケージの導入（`oh-my-opencode`, `mastracode` など）
 - ✅ Devbox (global) によるツール導入（gh, helix, fzf, `op` など）
 - ⚠️ Git認証情報はまだ設定されていません（次の手順で設定）
 
@@ -78,6 +79,7 @@ chezmoi apply
 ```bash
 # インストールされたツールを確認
 devbox global list
+bun pm -g ls --depth 0
 
 # Git設定を確認
 git config --global user.name
