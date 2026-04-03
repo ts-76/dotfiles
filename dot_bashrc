@@ -12,3 +12,12 @@ esac
 if command -v zsh > /dev/null 2>&1 && [ -z "${ZSH_VERSION:-}" ]; then
   exec zsh
 fi
+
+if [ -n "${NPM_CONFIG_PREFIX:-}" ]; then
+  PATH=":$PATH:"
+  PATH="${PATH//:$NPM_CONFIG_PREFIX\/bin:/:}"
+  PATH="${PATH#:}"
+  PATH="${PATH%:}"
+  PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+  export PATH
+fi
