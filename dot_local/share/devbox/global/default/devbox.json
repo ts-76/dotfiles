@@ -1,6 +1,6 @@
 {
   "packages": {
-    "nodejs": "24",
+    "nodejs_24": "latest",
     "prek": "latest",
     "helix": "latest",
     "gh": "latest",
