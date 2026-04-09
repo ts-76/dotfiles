@@ -6,6 +6,13 @@
 [[ -o interactive ]] || return
 
 # =============================================================================
+# Powerlevel10k instant prompt (zshrc の先頭に配置が必要)
+# =============================================================================
+if [ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# =============================================================================
 # Nix設定 (Devbox依存)
 # =============================================================================
 if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
