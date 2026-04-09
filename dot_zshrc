@@ -62,10 +62,6 @@ if [ -d "$HOME/.config/zsh" ]; then
   [ -f "$HOME/.config/zsh/gh-onboard.zsh" ] && source "$HOME/.config/zsh/gh-onboard.zsh"
 fi
 
-if command -v direnv > /dev/null 2>&1; then
-  eval "$(direnv hook zsh)"
-fi
-
 # Powerlevel10k
 if [ -r /usr/share/zsh-powerlevel10k/powerlevel10k.zsh-theme ]; then
   source /usr/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
@@ -76,6 +72,10 @@ elif [ -r "$HOME/.nix-profile/share/zsh-powerlevel10k/powerlevel10k.zsh-theme" ]
 fi
 
 [ -f "$HOME/.p10k.zsh" ] && source "$HOME/.p10k.zsh"
+
+if command -v direnv > /dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
 
 # zoxide must be at the end
 if command -v zoxide > /dev/null 2>&1; then
