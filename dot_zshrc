@@ -75,6 +75,13 @@ fi
 
 if command -v direnv > /dev/null 2>&1; then
   eval "$(direnv hook zsh)"
+  _direnv_hook >/dev/null 2>&1
+  precmd_functions=(${precmd_functions:#_direnv_hook})
+  _direnv_hook_after_startup() {
+    precmd_functions=(${precmd_functions:#_direnv_hook_after_startup})
+    precmd_functions=(_direnv_hook $precmd_functions)
+  }
+  precmd_functions=(_direnv_hook_after_startup $precmd_functions)
 fi
 
 # zoxide must be at the end
