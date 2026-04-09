@@ -12,7 +12,7 @@
     "fzf": "latest",
     "zoxide": "latest",
     "direnv": "2.36.0",
-    "starship": "latest",
+    "zsh-powerlevel10k": "latest",
     "eza": "latest",
     "bat": "latest",
     "yazi": "latest",

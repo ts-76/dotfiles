@@ -28,7 +28,7 @@ MacとWindows (WSL2) で**同じコマンド、同じバージョン、同じ設
 - 🔄 **クロスプラットフォーム** - Mac / Linux / WSL2 で同じ環境
 - 🐧 **WSL最適化** - `DOT_IS_WSL` を自動判定し、WSLとLinuxで実行時分岐
 - 📦 **再現性の保証** - Devbox (Nix) によるバージョン固定
-- 🎨 **モダンなツールセット** - starship, eza, bat, fzf など
+- 🎨 **モダンなツールセット** - zsh-powerlevel10k, eza, bat, fzf など
 - 🔧 **モジュール設計** - 機能別に分割された設定ファイル
 - 🔐 **認証情報設定** - Git/gh を MAIN/SUB で切り替え可能
 
@@ -63,7 +63,7 @@ chezmoi apply
 ```
 
 この段階で以下がセットアップされます：
-- ✅ dotfiles の配置（zsh / starship / helix / yazi / zellij / lazygit / opencode など）
+- ✅ dotfiles の配置（zsh / powerlevel10k / helix / yazi / zellij / lazygit / opencode など）
 - ✅ Bun global パッケージの導入（`oh-my-opencode`, `mastracode` など）
 - ✅ Devbox (global) によるツール導入（gh, helix, fzf, `op` など）
 - ⚠️ Git認証情報はまだ設定されていません（次の手順で設定）
@@ -153,7 +153,7 @@ dot-cred-status
 │   │   ├── git-account-switch.zsh
 │   │   └── profile.local.zsh.tmpl
 │   │
-│   ├── starship.toml                # プロンプト設定
+│   ├── p10k.zsh                     # Powerlevel10k プロンプト設定
 │   ├── yazi/                        # TUI ファイルマネージャー設定
 │   ├── zellij/                      # ターミナルマルチプレクサ設定
 │   ├── ghostty/                     # Ghostty 設定 (任意)
@@ -185,7 +185,7 @@ dot-cred-status
 - **direnv** - `.envrc` の自動読み込み
 
 ### シェル体験
-- **starship** - クロスシェル対応プロンプト
+- **zsh-powerlevel10k** - Zsh 向け高機能プロンプト
 
 ### ファイル操作
 - **eza** - モダンなls
@@ -283,4 +283,4 @@ MIT
 
 - [chezmoi](https://www.chezmoi.io/)
 - [Devbox](https://www.jetpack.io/devbox/)
-- [Starship](https://starship.rs/)
+- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
