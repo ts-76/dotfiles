@@ -63,7 +63,6 @@ if [ -d "$HOME/.config/zsh" ]; then
 fi
 
 if command -v direnv > /dev/null 2>&1; then
-  export DIRENV_LOG_FORMAT=""
   eval "$(direnv hook zsh)"
 fi
 
