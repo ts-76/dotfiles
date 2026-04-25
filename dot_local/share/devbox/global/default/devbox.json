@@ -22,7 +22,8 @@
     "yq": "latest",
     "github-copilot-cli": "latest",
     "opencode": "latest",
-    "bun": "latest"
+    "bun": "latest",
+    "pnpm": "latest"
   },
   "shell": {}
 }
