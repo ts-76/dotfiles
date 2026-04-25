@@ -23,7 +23,8 @@
     "github-copilot-cli": "latest",
     "opencode": "latest",
     "bun": "latest",
-    "pnpm": "latest"
+    "pnpm": "latest",
+    "_1password-cli": "latest"
   },
   "shell": {}
 }
