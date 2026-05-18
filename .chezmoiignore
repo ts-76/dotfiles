@@ -2,3 +2,6 @@ README.md
 docs/
 LICENSE
 .git/
+
+# Devbox lockfiles are generated locally by `devbox global update`.
+.local/share/devbox/global/default/devbox.lock
