@@ -33,13 +33,6 @@ if command -v devbox > /dev/null 2>&1; then
   eval "$(devbox global shellenv)"
 fi
 
-if [ -n "${NPM_CONFIG_PREFIX:-}" ]; then
-  PATH="${PATH//:$NPM_CONFIG_PREFIX\/bin/}"
-  PATH="${PATH//#$NPM_CONFIG_PREFIX\/bin:/}"
-  PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-  export PATH
-fi
-
 # =============================================================================
 # 補完設定
 # =============================================================================
