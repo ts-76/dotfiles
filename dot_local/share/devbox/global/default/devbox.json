@@ -28,9 +28,9 @@
     "glab":                "latest",
     "tmux":                "latest",
     "tree":                "latest",
-    "uv":                         "latest",
-    "xq":                         "latest",
-    "github:nrslib/takt#default": "latest"
+    "uv":                  "latest",
+    "xq":                  "latest",
+    "github:nrslib/takt#default": ""
   },
   "shell": {}
 }
