@@ -36,14 +36,14 @@ window-step-resize = true
 
 # フォントファミリー（日本語対応のためフォールバック追加）
 font-family = "JetBrains Mono"
-font-family = "BIZ UDGothic Bold"
+font-family = "BIZ UDGothic"
 font-feature = -dlig
 
 # フォントサイズ
 font-size = 13
 
 # フォントの太さ調整
-font-thicken = true
+font-thicken = false
 
 # =============================================================================
 # カーソル設定

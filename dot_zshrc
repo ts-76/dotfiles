@@ -30,7 +30,8 @@ fi
 # Devboxの有効化 (Global)
 # =============================================================================
 if command -v devbox > /dev/null 2>&1; then
-  eval "$(devbox global shellenv)"
+  eval "$(devbox global shellenv --preserve-path-stack 2>/dev/null)"
+  hash -r
 fi
 
 # =============================================================================
