@@ -30,7 +30,9 @@
     "tree":                "latest",
     "uv":                  "latest",
     "xq":                  "latest",
-    "github:nrslib/takt#default": ""
+    "github:nrslib/takt#default": "",
+    "github:ogulcancelik/herdr#default": "",
+    "github:yusukebe/ax#default": ""
   },
   "shell": {}
 }
