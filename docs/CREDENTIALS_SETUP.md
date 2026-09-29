@@ -72,7 +72,7 @@ git-account-switch main
 git-account-switch sub
 ```
 
-`git-account-switch` は `GIT_MAIN_*` / `GIT_SUB_*` を使って、現在のrepoへ `git config --local user.name` / `user.email` を設定し、続けて `gh auth switch` を実行します。
+`git-account-switch` は `GIT_MAIN_*` / `GIT_SUB_*` を使って、現在のrepoへ `git config --local user.name` / `user.email` を設定し、続けて必要な場合だけ `gh auth switch` を実行します。
 
 ## repo単位でmain/subを自動判定する
 
@@ -98,7 +98,7 @@ git-account-bind sub
 git-account-auto
 ```
 
-`.envrc` から自動実行されるモード（`--direnv`）では非対話で動作し、未確定情報がある場合は安全にスキップします。
+`.envrc` から自動実行されるモード（`--direnv`）では非対話かつ静かに動作します。Git identity や gh アカウントがすでに一致している場合は書き込みと切り替えを省略し、未確定情報がある場合は安全にスキップします。
 
 `git-account-auto` の判定優先順位:
 

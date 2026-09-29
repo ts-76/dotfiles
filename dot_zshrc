@@ -29,10 +29,20 @@ fi
 # =============================================================================
 # Devboxの有効化 (Global)
 # =============================================================================
-if command -v devbox > /dev/null 2>&1; then
+# グローバルプロファイルは固定パスのため、起動のたびに shellenv を再計算しない。
+_devbox_global_root="${XDG_DATA_HOME:-$HOME/.local/share}/devbox/global/default/.devbox"
+_devbox_global_profile="$_devbox_global_root/nix/profile/default/bin"
+if [ -d "$_devbox_global_profile" ]; then
+  typeset -U path PATH
+  _devbox_corepack_dirs=("$_devbox_global_root"/virtenv/nodejs_*/corepack-bin(N))
+  path=("${_devbox_corepack_dirs[@]}" "$_devbox_global_profile" $path)
+  [ -d "$_devbox_global_root/virtenv/runx/bin" ] && path+=("$_devbox_global_root/virtenv/runx/bin")
+  alias refresh-global='eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r'
+elif command -v devbox > /dev/null 2>&1; then
+  # 初回セットアップ時だけ Devbox に環境を生成させる。
   eval "$(devbox global shellenv --preserve-path-stack 2>/dev/null)"
-  hash -r
 fi
+unset _devbox_global_root _devbox_global_profile _devbox_corepack_dirs
 
 # =============================================================================
 # 補完設定

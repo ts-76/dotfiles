@@ -200,7 +200,7 @@ git-account-auto() {
     fi
     if [[ -z "$gh_user" ]]; then
         if [[ "$direnv_mode" == "true" ]]; then
-            git-account-switch "$account" --skip-gh
+            git-account-switch "$account" --skip-gh --quiet
             return $?
         fi
         read -r "gh_user?GitHub username for ${(U)account} (empty to skip): "
@@ -210,8 +210,16 @@ git-account-auto() {
     fi
 
     if [[ -n "$gh_user" ]]; then
-        git-account-switch "$account" --gh-user "$gh_user"
+        if [[ "$direnv_mode" == "true" ]]; then
+            git-account-switch "$account" --gh-user "$gh_user" --quiet
+        else
+            git-account-switch "$account" --gh-user "$gh_user"
+        fi
     else
-        git-account-switch "$account"
+        if [[ "$direnv_mode" == "true" ]]; then
+            git-account-switch "$account" --quiet
+        else
+            git-account-switch "$account"
+        fi
     fi
 }
