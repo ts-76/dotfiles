@@ -1,286 +1,216 @@
 # dotfiles
 
-**Devbox × chezmoi** で構築する、クロスプラットフォーム対応の開発環境設定です。
+macOS、Linux、WSL2 向けの CLI・開発環境設定です。chezmoi で設定ファイルを配置し、Devbox と Bun でツールを管理します。Graphify は Devbox の `uv` で導入します。
 
-MacとWindows (WSL2) で**同じコマンド、同じバージョン、同じ設定**を実現します。
+## セットアップ
 
----
-
-## 目次
-
-- [特徴](#特徴)
-- [前提（ネイティブでインストールしておくもの）](#前提ネイティブでインストールしておくもの)
-- [クイックスタート](#クイックスタート)
-- [ドキュメント](#ドキュメント)
-- [採用ツールと役割](#採用ツールと役割)
-- [ディレクトリ構成](#ディレクトリ構成)
-- [インストールされるツール](#インストールされるツール)
-- [主要ファイルの説明](#主要ファイルの説明)
-- [よく使うコマンド](#よく使うコマンド)
-- [ライセンス](#ライセンス)
-- [参考](#参考)
-
----
-
-## 特徴
-
-- 🚀 **2段階セットアップ** - 基本環境 → 認証情報設定（HTTPS + gh）で完全運用
-- 🔄 **クロスプラットフォーム** - Mac / Linux / WSL2 で同じ環境
-- 🐧 **WSL最適化** - `DOT_IS_WSL` を自動判定し、WSLとLinuxで実行時分岐
-- 📦 **再現性の保証** - Devbox (Nix) によるバージョン固定
-- 🎨 **モダンなツールセット** - zsh-powerlevel10k, eza, bat, fzf など
-- 🔧 **モジュール設計** - 機能別に分割された設定ファイル
-- 🔐 **認証情報設定** - Git/gh を MAIN/SUB で切り替え可能
-
----
-
-## 前提（ネイティブでインストールしておくもの）
-
-このリポジトリは「Devboxで管理するツール群を、chezmoiで配置・適用する」構成です。
-そのため、以下は事前にOS側のパッケージマネージャ等でインストールしておいてください。
-
-- **git** - リポジトリ取得に使用
-- **chezmoi** - dotfiles の適用に使用（`chezmoi init --apply` を実行するために必須）
-- **nix** - Devbox のバックエンド（WSL2/Linux/Mac いずれも必要）
-- **devbox** - ツールのバージョン管理（`devbox global shellenv` を利用）
-- **zsh** - このdotfilesの標準シェル
-
----
-
-## クイックスタート
-
-### 1) 基本環境のインストール
-
-まず、[前提（ネイティブでインストールしておくもの）](#前提ネイティブでインストールしておくもの) をインストールした上で、dotfilesを適用します：
+Git、chezmoi、Nix、Devbox、Zsh を先にインストールしてください。
 
 ```bash
-# リポジトリから初期化して適用
-chezmoi init --apply https://github.com/YOUR_USERNAME/dotfiles.git
-
-# または、既にcloneしている場合
-chezmoi init
-chezmoi apply
+chezmoi init --apply https://github.com/ts-76/dotfiles.git
+devbox global install
+eval "$(devbox global shellenv)"
+~/.local/bin/dot-graphify-install
+jq -r '.dependencies | to_entries[] | "\(.key)@\(.value)"' ~/.bun/install/global/package.json \
+  | xargs bun add --global
+exec zsh
 ```
 
-この段階で以下がセットアップされます：
-- ✅ dotfiles の配置（zsh / powerlevel10k / helix / yazi / zellij / lazygit / opencode など）
-- ✅ Bun global パッケージの導入（`oh-my-opencode`, `mastracode` など）
-- ✅ Devbox (global) によるツール導入（gh, helix, fzf, `op` など）
-- ⚠️ Git認証情報はまだ設定されていません（次の手順で設定）
+`chezmoi apply` は設定ファイル、Devbox・Bun のマニフェスト、Graphify の導入スクリプトを配置します。パッケージ導入は上記のコマンドで実行してください。
 
-### 2) 認証情報の設定（任意）
+Vite+ のグローバル CLI `vp` は、[nix-vite-plus](https://github.com/ryoppippi/nix-vite-plus) の Nix flake を Devbox から導入します。現在の flake は Apple Silicon の macOS、x86_64 と aarch64 の Linux に対応しています。WSL2 は Linux として扱います。更新には `devbox global update` を使います。
 
-- 認証情報は [`docs/CREDENTIALS_SETUP.md`](./docs/CREDENTIALS_SETUP.md) に集約しています
-- 初期化時の質問で `GIT_MAIN_*` / `GIT_SUB_*` を設定し、`~/.config/zsh/credentials.local.zsh` が生成されます（`GITHUB_*_USERNAME` は `GIT_*_NAME` と同値）
-- Workspaceフォルダ作成（`~/workspace/personal` / `~/workspace/work`）はスキップ可能です
+Node.js、Bun、pnpm も Devbox で管理します。
 
-### 3) 確認
+認証情報の初期設定では名前、メールアドレス、Git MAIN/SUB の情報を入力します。GitHub のユーザー名は Git の表示名とは別に任意で入力します。
 
 ```bash
-# インストールされたツールを確認
 devbox global list
 bun pm -g ls --depth 0
-
-# Git設定を確認
-git config --global user.name
-git config --global user.email
-
-# (任意) 認証情報の状態を確認
-dot-cred-status
+vp --version
+wrangler --version
+hono --help
+ast-grep --version
+graphify --help
+command -v node bun pnpm vp spf herdr
 ```
 
-### シェル起動方針（bash → zsh）
+## 既存環境を移行する
 
-この dotfiles では **zsh を標準シェル** とし、Bash 側は最小限に保ちます。
+不要になった Bun global パッケージを削除してから、新しい定義を適用してください。マニフェストからの削除だけでは、既存のグローバルパッケージの削除を保証しません。
 
-- `~/.bash_profile` は `~/.bashrc` を読むだけ
-- `~/.profile` は Bash 利用時のみ `~/.bashrc` に処理を委譲
-- `~/.bashrc` は非対話シェルでは何もせず、対話時は `zsh` に委譲
-- 重い初期化（補完、プロンプト、shell hook, Devbox など）は `~/.zshrc` 側に集約
-
-これにより、WSL2 で Bash と Zsh の初期化が重複して起動が遅くなるのを防ぎます。
-
----
-
-## ドキュメント
-
-- 認証情報設定（HTTPS運用）: [`docs/CREDENTIALS_SETUP.md`](./docs/CREDENTIALS_SETUP.md)
-- SSH運用（必要時のみ）: [`docs/CREDENTIALS_SSH_SETUP.md`](./docs/CREDENTIALS_SSH_SETUP.md)
-- キーバインド: [`docs/KEYBINDINGS.md`](./docs/KEYBINDINGS.md)
-
----
-
-## 採用ツールと役割
-
-| カテゴリ | 採用ツール | 役割・選定理由 |
-| --- | --- | --- |
-| **管理** | **chezmoi** | dotfilesの配置、テンプレート処理、機密情報管理。Go製で高速。 |
-| **ツール** | **Devbox** | Node, Go, Rust, k8s系ツールなどのバージョン管理。`nix` ベースで完全な再現性を保証。 |
-| **シェル** | **zsh** | MacとLinux(WSL)の標準シェルとして共通化。 |
-| **環境** | **WSL2** | Windows側での実行環境。Devboxを動かすために必須。 |
-| **Terminal** | (任意) | Windows Terminal (Win) / iTerm2 or Ghostty (Mac) など、OSネイティブなものを推奨。 |
-
----
-
-## ディレクトリ構成
-
-```text
-~/.local/share/chezmoi/
-├── docs/                           # ドキュメント
-│   ├── CREDENTIALS_SETUP.md        # 認証情報設定（HTTPS運用）
-│   ├── CREDENTIALS_SSH_SETUP.md    # SSH運用手順（必要時のみ）
-│   └── KEYBINDINGS.md              # Zellij / Yazi / Helix のキーバインド
-├── .chezmoiignore                   # chezmoi 管理対象から除外するパス
-├── .chezmoi.yaml.tmpl               # 初回init時にメールなどを聞く設定
-│
-├── dot_bash_profile                 # Bash ログインシェル設定（~/.bash_profile → ~/.bashrc）
-├── dot_bashrc                       # Bash は最小限にして対話時は zsh に委譲
-├── dot_profile                      # POSIX プロファイル（Bash 利用時は ~/.bashrc に委譲）
-├── dot_zshrc                        # Zsh の設定 (~/.zshrc)
-│
-├── dot_bun/                         # bun のグローバル設定
-│   └── install/global/package.json  # bun のグローバルパッケージ
-│
-├── dot_config/                      # ~/.config に展開されるディレクトリ
-│   ├── zsh/                         # zshの設定を機能別に分割
-│   │   ├── aliases.zsh
-│   │   ├── credentials.zsh
-│   │   ├── credentials.local.zsh.tmpl
-│   │   ├── exports.zsh.tmpl
-│   │   ├── functions.zsh
-│   │   ├── gh-onboard.zsh
-│   │   ├── git-account-auto.zsh
-│   │   ├── git-account-switch.zsh
-│   │   └── profile.local.zsh.tmpl
-│   │
-│   ├── p10k.zsh                     # Powerlevel10k プロンプト設定
-│   ├── yazi/                        # TUI ファイルマネージャー設定
-│   ├── zellij/                      # ターミナルマルチプレクサ設定
-│   ├── ghostty/                     # Ghostty 設定 (任意)
-│   └── opencode/                    # opencode 設定
-│
-├── dot_local/bin/executable_ide     # エディタ起動用の簡易コマンド
-├── dot_local/share/devbox/global/default/devbox.json  # Devbox のグローバル定義
-└── private_dot_ssh/config.tmpl      # ~/.ssh/config のテンプレート（GitHub SSH）
-
+```bash
+bun remove --global @google/gemini-cli @larksuiteoapi/lark-mcp aws-azure-login oh-my-opencode
+chezmoi diff
+chezmoi apply
+devbox global install
+eval "$(devbox global shellenv)"
+~/.local/bin/dot-graphify-install
+jq -r '.dependencies | to_entries[] | "\(.key)@\(.value)"' ~/.bun/install/global/package.json \
+  | xargs bun add --global
+exec zsh
 ```
 
----
+`.chezmoiremove` は、以前管理していた Zellij、Yazi、OpenCode、lazygit、Starship の設定ファイル、Helix の Yazi picker を削除します。対象は列挙したファイルだけです。認証情報やセッションデータ、親ディレクトリは削除しません。
 
-## インストールされるツール
+ターミナル管理は `herdr`、ファイル管理は `spf` を起動してください。Helix からのファイル選択は標準の `Space f` を使います。
 
-すべてのツールは `dot_local/share/devbox/global/default/devbox.json`（適用後は `~/.local/share/devbox/global/default/devbox.json`）で管理されています。
+## ツールの管理元
 
-### 開発ツール
-- **gh** - GitHub CLI
-- **lazygit** - Git TUI
-- **delta** - Git diff viewer
-- **helix** - テキストエディタ
+### Devbox
 
-### 検索・ナビゲーション
-- **ripgrep** - 高速grep
-- **fd** - 高速find
-- **fzf** - ファジーファインダー
-- **zoxide** - スマートcd
-- **direnv** - `.envrc` の自動読み込み
+定義は [`dot_local/share/devbox/global/default/devbox.json`](dot_local/share/devbox/global/default/devbox.json) にあります。適用先は `~/.local/share/devbox/global/default/devbox.json` です。
 
-### シェル体験
-- **zsh-powerlevel10k** - Zsh 向け高機能プロンプト
+| 用途 | パッケージ |
+| --- | --- |
+| ランタイム・パッケージ管理 | `nodejs_24`、`bun`、`pnpm`、`uv` |
+| Web 開発 | `vite-plus`（起動コマンドは `vp`） |
+| Git・ホスティング | `gh`、`glab`、`ghq` |
+| エディタ・ファイル管理 | `helix`、`superfile`（起動コマンドは `spf`） |
+| 検索・移動 | `ripgrep`、`fd`、`fzf`、`zoxide` |
+| コードの構文検索・書き換え | `ast-grep` |
+| シェル・環境 | `zsh-powerlevel10k`、`direnv` |
+| ファイル表示 | `eza`、`bat` |
+| ターミナル管理 | `herdr` |
+| データ処理 | `jq`、`yq`、`xq` |
+| 認証 | `_1password-cli`（`op`） |
+| コミット検査 | `prek` |
+| AI 開発支援 | `github-copilot-cli`、`takt` |
+| Web 取得 | `ax` |
 
-### ファイル操作
-- **eza** - モダンなls
-- **bat** - シンタックスハイライト付きcat
-- **yazi** - TUIファイルマネージャー
+`herdr`、`takt`、`ax`、`vite-plus` は GitHub の Nix flake を参照します。`direnv` は `2.36.0`、その他の通常パッケージは `latest` を指定しています。Devbox の lockfile はローカル生成で、このリポジトリには含めません。
 
-### ターミナル
-- **zellij** - ターミナルマルチプレクサ
+```bash
+devbox global install
+devbox global update
+```
 
-### ユーティリティ
-- **jq** - JSONプロセッサ
-- **yq** - YAMLプロセッサ
-- **bun** - 高速JavaScriptランタイム
+### Bun global
 
-### AI
-- **github-copilot-cli** - GitHub Copilot CLI
+定義は [`dot_bun/install/global/package.json`](dot_bun/install/global/package.json) にあります。適用先は `~/.bun/install/global/package.json` です。
 
----
+| パッケージ | 用途 |
+| --- | --- |
+| `@anthropic-ai/claude-code` | Claude Code |
+| `@hono/cli` | Hono CLI |
+| `@openai/codex` | Codex CLI |
+| `mastracode` | Mastra Code |
+| `@playwright/cli` | ブラウザ操作・自動化 |
+| `wrangler` | Cloudflare Workers などの管理 |
 
-## 主要ファイルの説明
+```bash
+jq -r '.dependencies | to_entries[] | "\(.key)@\(.value)"' ~/.bun/install/global/package.json \
+  | xargs bun add --global
+```
 
-### 設定ファイル
-- `dot_bash_profile` - Bash ログインシェル設定。`~/.bashrc` を読むだけに限定
-- `dot_bashrc` - Bash のエントリーポイント。非対話シェルでは何もせず、対話時は zsh に委譲
-- `dot_profile` - POSIX プロファイル。Bash 利用時のみ `~/.bashrc` に処理を委譲
-- `dot_zshrc` - Zsh のエントリーポイント
-- `dot_config/zsh/exports.zsh.tmpl` - 環境変数（`DOT_IS_WSL` 判定を含む）
-- `dot_config/zsh/aliases.zsh` - エイリアス
-- `dot_config/zsh/credentials.zsh` - 資格情報（localファイル）
-- `dot_config/zsh/credentials.local.zsh.tmpl` - local認証情報ファイルのテンプレート
-- `dot_config/zsh/functions.zsh` - カスタム関数
-- `dot_config/zsh/gh-onboard.zsh` - MAIN/SUBのgh認証オンボーディング（HTTPS）
-- `dot_config/zsh/git-account-auto.zsh` - repo単位でmain/subを自動判定し、direnv連携で適用
-- `dot_config/zsh/git-account-switch.zsh` - repo単位でGit/ghアカウント切り替え
-- `dot_config/lazygit/config.yml` - lazygit 設定（diff パネルで delta を使用: 行番号/横並び/hyperlinks）
-- `dot_bun/install/global/package.json` - bun のグローバルパッケージ
-- `dot_local/share/devbox/global/default/devbox.json` - Devbox の導入ツール一覧
-- `private_dot_ssh/config.tmpl` - GitHub 向け SSH 設定テンプレ（鍵そのものは含めない）
-- `docs/CREDENTIALS_SETUP.md` - 認証情報設定（HTTPS運用）の詳細手順
-- `docs/CREDENTIALS_SSH_SETUP.md` - SSH運用が必要な場合の手順
-- `docs/KEYBINDINGS.md` - Zellij / Yazi / Helix のキーバインドまとめ
+### Graphify
 
----
+[`dot_local/bin/executable_dot-graphify-install`](dot_local/bin/executable_dot-graphify-install) を `~/.local/bin/dot-graphify-install` として配置します。このスクリプトは `uv tool` で公式パッケージ `graphifyy==0.9.90` を Python 3.12 の環境に導入します。Python 3.12 がない場合は `uv` が取得します。起動コマンドは `graphify` です。
+
+```bash
+~/.local/bin/dot-graphify-install
+graphify --help
+```
+
+更新する場合は、スクリプトのバージョン指定を変更して再実行してください。バージョンを固定しているため、`uv tool upgrade graphifyy` では更新しません。
+
+Graphify 0.9.90 のローカルクエリログは初期状態で無効です。この dotfiles でも `~/.zshenv` に `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定し、対話・非対話の Zsh で `GRAPHIFY_QUERY_LOG_ENABLE` やログ保存先の指定があっても記録を無効にします。シェルの環境変数を引き継がない MCP クライアントで Graphify を使う場合は、MCP サーバーの環境変数にも `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定してください。この設定は API 呼び出しなどのネットワーク通信を無効にするものではありません。
+
+コードのみの解析には API キーは不要です。解析対象のリポジトリで次のコマンドを実行します。グラフの出力は各リポジトリの `graphify-out/` に保存します。
+
+```bash
+graphify extract . --code-only
+graphify cluster-only . --no-label
+graphify query "authentication flow"
+graphify update .
+```
+
+Codex のスキル連携が必要なリポジトリでは、次のコマンドを追加で実行します。
+
+```bash
+graphify install --project --platform codex
+```
+
+登録処理はリポジトリ内のスキル・指示ファイルやフックを変更します。変更内容を確認してからコミットしてください。CLI の導入スクリプトはスキル登録やグラフ生成を実行しません。他のエージェントとの連携は [Graphify の連携ガイド](https://docs.graphify.com/integrations/overview) を参照してください。
+
+### Vite+
+
+Devbox の `github:ryoppippi/nix-vite-plus#vp` が standalone の `vp` を導入します。npm のプロジェクト用 `vite-plus` パッケージは global CLI と別のものです。
+
+初回起動では Vite+ がユーザー環境を初期化します。この dotfiles の Zsh では `VP_SELF_SETUP_NO_MODIFY_PATH=1` でシェル設定の自動書き換えを止め、PATH は Devbox で管理します。Devbox の Node.js とパッケージマネージャーを優先するには、次の環境変数を付けて初回起動してください。
+
+```bash
+VP_NODE_MANAGER=no VP_PM_MANAGER=no vp --help
+devbox global update
+```
+
+## 設定ファイル
+
+| ファイル | 内容 |
+| --- | --- |
+| `dot_zshenv` | Graphify のクエリログ、Vite+ のシェル設定書き換えを無効化 |
+| `dot_zshrc` | Zsh の初期化、Devbox の PATH、補完、プロンプト |
+| `dot_config/zsh/exports.zsh.tmpl` | `EDITOR=hx`、XDG、npm global の PATH、Linux の Fcitx5 |
+| `dot_config/zsh/aliases.zsh` | eza、bat、Git、chezmoi のエイリアス |
+| `dot_config/zsh/functions.zsh` | fzf のファイル選択などの関数 |
+| `dot_config/zsh/credentials.local.zsh.tmpl` | Git MAIN/SUB の認証情報 |
+| `dot_config/zsh/git-account-auto.zsh` | リポジトリごとのアカウント判定 |
+| `dot_config/zsh/git-account-switch.zsh` | Git・GitHub アカウント切り替え |
+| `dot_config/zsh/gh-onboard.zsh` | GitHub 認証の初期設定 |
+| `dot_p10k.zsh` | Powerlevel10k のプロンプト |
+| `dot_config/helix/config.toml` | Helix のテーマ、行番号、自動保存 |
+| `dot_config/ghostty/config` | Ghostty の設定 |
+| `private_dot_ssh/config.tmpl` | GitHub 向け SSH 設定 |
+| `.chezmoiremove` | 移行時に削除する旧設定ファイルの一覧 |
+
+superfile と herdr は既定設定を使います。Nix 版の実行名は `superfile` のため、`spf` ラッパーから起動します。ファイル編集には既存の `EDITOR=hx` を使います。
+
+対話的な Bash は Zsh へ委譲します。非対話的な Bash は通常どおり動作します。補完、プロンプト、Devbox、direnv、zoxide の初期化は Zsh にまとめています。
 
 ## よく使うコマンド
 
-### chezmoi
-
 ```bash
-chezmoi update          # リポジトリから最新を取得して適用
-chezmoi cd             # chezmoiのソースディレクトリに移動
-chezmoi diff           # 変更差分を確認
-chezmoi apply          # 変更を適用
-chezmoi edit ~/.zshrc  # ファイルを編集
+chezmoi update
+chezmoi diff
+chezmoi apply
+chezmoi edit ~/.zshrc
+
+herdr
+spf
+fe                      # fzf でファイルを選び、EDITOR（hx）で開く
+mkcd <dir>
+fco
+git-account-switch main
+git-account-bind main
+git-account-auto
+dot-gh-onboard
+killport 3000
+extract <file>
 ```
 
-### pre-commit（ローカル）
+## コミット前の検査
 
-`prek` + `secretlint` で、秘密鍵やトークンのコミットを防止できます。
+Secretlint はリポジトリ内の開発依存です。`prek` から実行します。
 
 ```bash
-# secretlint 依存（ルール含む）
 bun install --cwd tools/secretlint
-
-# git hook を導入
 prek install
-
-# (任意) 全ファイルをチェック
 prek run --all-files
 ```
 
-### カスタム関数
+## ドキュメント
 
-```bash
-mkcd <dir>     # ディレクトリ作成 & 移動
-fe             # fzfでファイルを選択してnvimで開く
-fco            # fzfでGitブランチを選択してcheckout
-git-account-switch main  # repoローカルのgit user + ghアカウント切り替え
-git-account-bind main    # repoをmainに固定 + .envrc生成
-git-account-auto            # repo設定から自動判定して適用
-dot-gh-onboard           # MAIN/SUBのghログイン確認とsetup-git
-killport 3000  # ポート3000を使用しているプロセスをkill
-extract <file> # 様々な形式のアーカイブを自動展開
-```
-
----
+- [Git・GitHub の認証情報設定](docs/CREDENTIALS_SETUP.md)
+- [SSH の設定](docs/CREDENTIALS_SSH_SETUP.md)
+- [キーバインド](docs/KEYBINDINGS.md)
+- [herdr の使い方](https://herdr.dev/docs/)
+- [superfile のキーバインド](https://superfile.dev/list/hotkeys-list/)
+- [Vite+ のセットアップ](https://viteplus.dev/guide/)
+- [Wrangler のドキュメント](https://developers.cloudflare.com/workers/wrangler/)
+- [Hono CLI のドキュメント](https://hono.dev/docs/agents/cli)
+- [ast-grep のクイックスタート](https://ast-grep.github.io/guide/quick-start.html)
+- [Graphify の導入方法](https://docs.graphify.com/installation)
 
 ## ライセンス
 
 MIT
-
----
-
-## 参考
-
-- [chezmoi](https://www.chezmoi.io/)
-- [Devbox](https://www.jetpack.io/devbox/)
-- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)

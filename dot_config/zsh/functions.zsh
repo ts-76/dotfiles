@@ -72,8 +72,6 @@ extract() {
             *.gz)        gunzip "$1"      ;;
             *.tar)       tar xf "$1"      ;;
             *.zip)       unzip "$1"       ;;
-            *.rar)       unrar x "$1"     ;;
-            *.7z)        7z x "$1"        ;;
             *)           echo "'$1' cannot be extracted via extract()" ;;
         esac
     else
@@ -85,37 +83,11 @@ extract() {
 # Git ユーザー切り替え
 # =============================================================================
 gsub() {
-    if [ -z "${GIT_SUB_NAME:-}" ] || [ -z "${GIT_SUB_EMAIL:-}" ]; then
-        if command -v dot-cred-refresh >/dev/null 2>&1; then
-            dot-cred-refresh >/dev/null 2>&1 || true
-        fi
-    fi
-    if [ -z "${GIT_SUB_NAME:-}" ] || [ -z "${GIT_SUB_EMAIL:-}" ]; then
-        echo "SUB credentials are not set (GIT_SUB_NAME/GIT_SUB_EMAIL)." >&2
-        echo "- Run: chezmoi apply" >&2
-        echo "- Or edit: ~/.config/zsh/credentials.local.zsh" >&2
-        return 1
-    fi
-    git config user.name "$GIT_SUB_NAME"
-    git config user.email "$GIT_SUB_EMAIL"
-    echo "Switched to SUB user: $GIT_SUB_NAME <$GIT_SUB_EMAIL>"
+    git-account-switch sub --skip-gh
 }
 
 gmain() {
-    if [ -z "${GIT_MAIN_NAME:-}" ] || [ -z "${GIT_MAIN_EMAIL:-}" ]; then
-        if command -v dot-cred-refresh >/dev/null 2>&1; then
-            dot-cred-refresh >/dev/null 2>&1 || true
-        fi
-    fi
-    if [ -z "${GIT_MAIN_NAME:-}" ] || [ -z "${GIT_MAIN_EMAIL:-}" ]; then
-        echo "MAIN credentials are not set (GIT_MAIN_NAME/GIT_MAIN_EMAIL)." >&2
-        echo "- Run: chezmoi apply" >&2
-        echo "- Or edit: ~/.config/zsh/credentials.local.zsh" >&2
-        return 1
-    fi
-    git config user.name "$GIT_MAIN_NAME"
-    git config user.email "$GIT_MAIN_EMAIL"
-    echo "Switched to MAIN user: $GIT_MAIN_NAME <$GIT_MAIN_EMAIL>"
+    git-account-switch main --skip-gh
 }
 
 gwho() {

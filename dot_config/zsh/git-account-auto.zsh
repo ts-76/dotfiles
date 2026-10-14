@@ -110,7 +110,7 @@ git-account-bind() {
     account="${1:-}"
 
     if ! _dot_git_account_valid "$account"; then
-        echo "Usage: git-account-bind [main|sub] [--gh-user <github-username>]" >&2
+        echo "Usage: git-account-bind [main|sub]" >&2
         return 1
     fi
 

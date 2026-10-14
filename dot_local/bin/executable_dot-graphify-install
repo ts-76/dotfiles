@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec uv tool install --python 3.12 'graphifyy==0.9.90'

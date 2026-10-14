@@ -1,43 +1,30 @@
 # キーバインド
 
-Zellij / Yazi / Helix の連携や追加キーバインドをまとめています。
+herdr、superfile、Helix の標準操作をまとめています。このリポジトリでは追加のキーバインドを設定していません。
 
-## 目次
+## herdr
 
-- [Zellij](#zellij)
-- [Yazi](#yazi)
-- [Helix](#helix)
+`herdr` で起動します。プレフィックスは `Ctrl+b` です。プレフィックスを押して離してから、次のキーを押します。
 
-## Zellij
+| プレフィックス後のキー | 操作 |
+| --- | --- |
+| `c` | 新しいタブ |
+| `v` | 右に分割 |
+| `-` | 下に分割 |
+| `h`、`j`、`k`、`l` | 左、下、上、右のペインへ移動 |
+| `q` | セッションを動かしたままデタッチ |
+| `?` | 有効なキーバインドを表示 |
 
-- 既定レイアウト: `startup`
-- 追加レイアウト: `agent`
-  - 左: Yazi (Editor)
-  - 右上: Implement
-  - 右下: Review
+[herdr の公式キーボードガイド](https://herdr.dev/docs/keyboard/) に全操作があります。
 
-## Yazi
+## superfile
 
-### 追加キーバインド
+`spf` で起動します。ファイル編集では `EDITOR` に指定した Helix を使います。
 
-- `g i` : lazygit を現在のディレクトリで起動
-- `d d` : 選択中のファイルをゴミ箱へ移動
-
-### Zellij 連携
-
-- `z r` : 右スプリットに開く
-  - ディレクトリ: bash を起動
-  - ファイル: helix で開く
-- `z d` : 下スプリットに開く
-  - ディレクトリ: bash を起動
-  - ファイル: helix で開く
-- `z c` : 右スプリットに Open Code で開く
-  - ファイルの場合は helix で開く
-- `z a` : `agent` レイアウトの新規タブで開く
+操作一覧は [superfile の公式キーバインド一覧](https://superfile.dev/list/hotkeys-list/) を参照してください。
 
 ## Helix
 
-### 追加キーバインド
+ノーマルモードで `Space f` を押すと、標準のファイル picker が開きます。
 
-- `Ctrl+y` : Zellij のフローティングペインで Yazi を開き、選択したパスを Helix で開く
-  - スクリプト: `~/.config/helix/yazi-picker.sh`
+[Helix の標準キーバインド](https://docs.helix-editor.com/keymap.html) に全操作があります。

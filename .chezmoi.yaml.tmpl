@@ -4,7 +4,9 @@
 {{- $gitMainEmailInput := promptStringOnce . "dot_git_main_email" "Git MAIN の user.email を入力してください（空なら上記のメールを利用）" -}}
 {{- $gitSubName := promptStringOnce . "dot_git_sub_name" "(任意) Git SUB の user.name を入力してください（空ならスキップ）" -}}
 {{- $gitSubEmail := promptStringOnce . "dot_git_sub_email" "(任意) Git SUB の user.email を入力してください（空ならスキップ）" -}}
-{{- $dotWorkspaceCreateAnswer := promptStringOnce . "dot_workspace_create" "Workspaceフォルダ（~/workspace/personal と ~/workspace/work）を作成しますか？ (y/N)" -}}
+
+{{- $githubMainUsername := promptStringOnce . "dot_github_main_username" "(任意) GitHub MAIN のユーザー名を入力してください（空ならスキップ）" -}}
+{{- $githubSubUsername := promptStringOnce . "dot_github_sub_username" "(任意) GitHub SUB のユーザー名を入力してください（空ならスキップ）" -}}
 
 {{- $gitMainName := $gitMainNameInput -}}
 {{- if eq (trim $gitMainName) "" -}}
@@ -17,12 +19,6 @@
 {{- end -}}
 
 {{- $dotGithubSshSource := "local" -}}
-{{- $dotWorkspaceCreate := false -}}
-
-{{- $ans := lower (trim $dotWorkspaceCreateAnswer) -}}
-{{- if or (eq $ans "y") (eq $ans "yes") (eq $ans "true") (eq $ans "1") -}}
-{{-   $dotWorkspaceCreate = true -}}
-{{- end -}}
 
 data:
   email: {{ $email | quote }}
@@ -31,5 +27,6 @@ data:
   dot_git_main_email: {{ $gitMainEmail | quote }}
   dot_git_sub_name: {{ $gitSubName | quote }}
   dot_git_sub_email: {{ $gitSubEmail | quote }}
-  dot_workspace_create: {{ $dotWorkspaceCreate }}
+  dot_github_main_username: {{ $githubMainUsername | quote }}
+  dot_github_sub_username: {{ $githubSubUsername | quote }}
   dot_github_ssh_source: {{ $dotGithubSshSource | quote }}

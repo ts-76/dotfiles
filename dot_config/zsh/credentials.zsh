@@ -10,11 +10,6 @@ _dot_has_cmd() {
   command -v "$1" >/dev/null 2>&1
 }
 
-_dot_log() {
-  [[ "${DOT_CRED_VERBOSE:-0}" == "1" ]] || return 0
-  print -r -- "$@" >&2
-}
-
 _dot_cred_local_file() {
   print -r -- "${DOT_CRED_LOCAL_FILE:-$HOME/.config/zsh/credentials.local.zsh}"
 }

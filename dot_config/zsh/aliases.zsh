@@ -54,11 +54,6 @@ alias mkdir="mkdir -pv"
 # 開発ツール
 # =============================================================================
 
-# Lazygit (Git TUI)
-if command -v lazygit > /dev/null 2>&1; then
-    alias lg="lazygit"
-fi
-
 # Chezmoi (dotfiles管理)
 if command -v chezmoi > /dev/null 2>&1; then
     alias cm="chezmoi"
@@ -67,16 +62,6 @@ if command -v chezmoi > /dev/null 2>&1; then
     alias cmd="chezmoi diff"
     alias cms="chezmoi status"
     alias cmu="chezmoi update"
-fi
-
-# Zellij (ターミナルマルチプレクサ)
-if command -v zellij > /dev/null 2>&1; then
-    alias zj="zellij attach main --create"
-    alias zja="zellij a"
-    alias zjl="zellij ls"
-    alias zjk="zellij k"
-    alias zjka="zellij ka"
-    alias zjda="zellij da"
 fi
 
 # =============================================================================

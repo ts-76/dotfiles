@@ -19,9 +19,9 @@
 - `name` / `email`
 - `dot_git_main_name` / `dot_git_main_email`（空なら `name` / `email` を利用）
 - `dot_git_sub_name` / `dot_git_sub_email`（任意）
-- `dot_workspace_create`（workspaceフォルダを作成するか）
+- `dot_github_main_username` / `dot_github_sub_username`（任意）
 
-`GITHUB_MAIN_USERNAME` / `GITHUB_SUB_USERNAME` は `GIT_MAIN_NAME` / `GIT_SUB_NAME` と同じ値で生成されます。
+`GITHUB_MAIN_USERNAME` / `GITHUB_SUB_USERNAME` は Git の表示名とは別に設定します。空欄の場合は GitHub ユーザー名を設定せず、必要なときに入力します。
 
 ## 生成されるGit認証情報ファイル
 
@@ -32,10 +32,10 @@
 ```sh
 export GIT_MAIN_NAME="Your Name"
 export GIT_MAIN_EMAIL="you@example.com"
-export GITHUB_MAIN_USERNAME="Your Name"
+export GITHUB_MAIN_USERNAME="your-main-account"
 export GIT_SUB_NAME="Sub Name"
 export GIT_SUB_EMAIL="you@sub.example"
-export GITHUB_SUB_USERNAME="Sub Name"
+export GITHUB_SUB_USERNAME="your-sub-account"
 ```
 
 値を変更する場合:
@@ -88,7 +88,7 @@ git-account-bind sub
 
 1. `dot-cred-refresh` で環境変数を再読込
 2. `dot.account` をrepoローカルへ保存
-3. `GITHUB_MAIN_USERNAME` / `GITHUB_SUB_USERNAME`（= Git name）から `dot.ghUser.<account>` を保存
+3. `GITHUB_MAIN_USERNAME` / `GITHUB_SUB_USERNAME` から `dot.ghUser.<account>` を保存
 4. `.envrc` を生成し、`DOT_ACCOUNT` を設定して `git-account-auto --direnv` を呼ぶ
 5. `direnv allow` を実行（direnv導入済みの場合）
 
@@ -102,10 +102,11 @@ git-account-auto
 
 `git-account-auto` の判定優先順位:
 
-1. `git config --local dot.account`（`git-account-bind` で保存した値）
-2. `git config --local user.email` と `GIT_MAIN_EMAIL` / `GIT_SUB_EMAIL` の一致
-3. `dot.mainOwners` / `dot.subOwners` と origin owner の一致（任意設定）
-4. 判定不能時は `main/sub` を質問して `dot.account` に保存
+1. `DOT_ACCOUNT` 環境変数
+2. `git config --local dot.account`（`git-account-bind` で保存した値）
+3. `git config --local user.email` と `GIT_MAIN_EMAIL` / `GIT_SUB_EMAIL` の一致
+4. `dot.mainOwners` / `dot.subOwners` と origin owner の一致（任意設定）
+5. 判定不能時は `main/sub` を質問して `dot.account` に保存
 
 補足（ownerベース判定を使う場合）:
 
