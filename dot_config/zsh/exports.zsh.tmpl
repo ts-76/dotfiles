@@ -38,19 +38,10 @@ export GITHUB_SUB_USERNAME="${GITHUB_SUB_USERNAME:-}"
 # FZF設定 (fdを使用)
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
 
-# Bun
-export BUN_INSTALL="$HOME/.bun"
-path_prepend "$BUN_INSTALL/bin"
-export PATH
-
 # XDG Base Directory
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
-
-# npm globals (avoid writing into the Nix store)
-path_prepend "$HOME/.local/share/npm/bin"
-export PATH
 
 {{- if eq .chezmoi.os "linux" }}
 # IME (日本語入力) 設定 - Fcitx5 (Linux/WSL のみ)

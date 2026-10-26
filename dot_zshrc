@@ -34,24 +34,31 @@ _devbox_global_root="${XDG_DATA_HOME:-$HOME/.local/share}/devbox/global/default/
 _devbox_global_profile="$_devbox_global_root/nix/profile/default/bin"
 if [ -d "$_devbox_global_profile" ]; then
   typeset -U path PATH
-  _devbox_corepack_dirs=("$_devbox_global_root"/virtenv/nodejs_*/corepack-bin(N))
-  path=("${_devbox_corepack_dirs[@]}" "$_devbox_global_profile" $path)
+  path=("$_devbox_global_profile" $path)
   [ -d "$_devbox_global_root/virtenv/runx/bin" ] && path+=("$_devbox_global_root/virtenv/runx/bin")
   alias refresh-global='eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r'
 elif command -v devbox > /dev/null 2>&1; then
   # 初回セットアップ時だけ Devbox に環境を生成させる。
   eval "$(devbox global shellenv --preserve-path-stack 2>/dev/null)"
 fi
-unset _devbox_global_root _devbox_global_profile _devbox_corepack_dirs
+unset _devbox_global_root _devbox_global_profile
 
 # =============================================================================
 # 補完設定
 # =============================================================================
+_devbox_completions="${XDG_DATA_HOME:-$HOME/.local/share}/devbox/global/default/.devbox/nix/profile/default/share/zsh/site-functions"
+[ -d "$_devbox_completions" ] && fpath=("$_devbox_completions" $fpath)
+unset _devbox_completions
 autoload -Uz compinit
 _zcompdump_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
 mkdir -p "$_zcompdump_dir"
 compinit -d "$_zcompdump_dir/.zcompdump"
 unset _zcompdump_dir
+
+path=(${path:#$HOME/.bun/bin})
+path=(${path:#$HOME/.local/share/npm/bin})
+path=(${path:#$HOME/.local/share/devbox/global/default/.devbox/virtenv/nodejs_*/corepack-bin})
+[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/vite-plus/env" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/vite-plus/env"
 
 # =============================================================================
 # エイリアス/関数

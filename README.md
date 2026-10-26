@@ -1,6 +1,6 @@
 # dotfiles
 
-macOS、Linux、WSL2 向けの CLI・開発環境設定です。chezmoi で設定ファイルを配置し、Devbox と Bun でツールを管理します。Graphify は Devbox の `uv` で導入します。
+macOS、Linux、WSL2 向けの CLI・開発環境設定です。chezmoi で設定ファイルを配置し、Devbox と Vite Plus でツールを管理します。Graphify は Devbox の `uv` で導入します。
 
 ## セットアップ
 
@@ -8,25 +8,22 @@ Git、chezmoi、Nix、Devbox、Zsh を先にインストールしてください
 
 ```bash
 chezmoi init --apply https://github.com/ts-76/dotfiles.git
-devbox global install
-eval "$(devbox global shellenv)"
 ~/.local/bin/dot-graphify-install
-jq -r '.dependencies | to_entries[] | "\(.key)@\(.value)"' ~/.bun/install/global/package.json \
-  | xargs bun add --global
 exec zsh
 ```
 
-`chezmoi apply` は設定ファイル、Devbox・Bun のマニフェスト、Graphify の導入スクリプトを配置します。パッケージ導入は上記のコマンドで実行してください。
+`chezmoi apply` は設定ファイルを配置し、変更された定義に応じてDevboxとVite Plusの導入処理を実行します。Graphifyは上記の専用スクリプトで導入してください。
 
 Vite+ のグローバル CLI `vp` は、[nix-vite-plus](https://github.com/ryoppippi/nix-vite-plus) の Nix flake を Devbox から導入します。現在の flake は Apple Silicon の macOS、x86_64 と aarch64 の Linux に対応しています。WSL2 は Linux として扱います。更新には `devbox global update` を使います。
 
-Node.js、Bun、pnpm も Devbox で管理します。
+Node.js、npm、pnpm、BunとJavaScript製CLIはVite Plusで管理します。[設定・復元手順](docs/VITE_PLUS.md)を参照してください。
 
 認証情報の初期設定では名前、メールアドレス、Git MAIN/SUB の情報を入力します。GitHub のユーザー名は Git の表示名とは別に任意で入力します。
 
 ```bash
 devbox global list
-bun pm -g ls --depth 0
+vp-tools --check
+vp list -g
 vp --version
 wrangler --version
 hono --help
@@ -37,19 +34,9 @@ command -v node bun pnpm vp spf herdr
 
 ## 既存環境を移行する
 
-不要になった Bun global パッケージを削除してから、新しい定義を適用してください。マニフェストからの削除だけでは、既存のグローバルパッケージの削除を保証しません。
-
-```bash
-bun remove --global @google/gemini-cli @larksuiteoapi/lark-mcp aws-azure-login oh-my-opencode
-chezmoi diff
-chezmoi apply
-devbox global install
-eval "$(devbox global shellenv)"
-~/.local/bin/dot-graphify-install
-jq -r '.dependencies | to_entries[] | "\(.key)@\(.value)"' ~/.bun/install/global/package.json \
-  | xargs bun add --global
-exec zsh
-```
+既存のBun/npmの導入先は、Vite Plus側の導入と起動確認が済むまで残してください。
+今回の移行では、Vite Plusの導入後にDevboxの重複ランタイムを整理し、最後にシェルのPATHを切り替えています。
+新しいターミナルで`vp-tools --check`と各CLIの起動を確認してください。
 
 `.chezmoiremove` は、以前管理していた Zellij、Yazi、OpenCode、lazygit、Starship の設定ファイル、Helix の Yazi picker を削除します。対象は列挙したファイルだけです。認証情報やセッションデータ、親ディレクトリは削除しません。
 
@@ -59,13 +46,18 @@ exec zsh
 
 ### Devbox
 
-定義は [`dot_local/share/devbox/global/default/devbox.json`](dot_local/share/devbox/global/default/devbox.json) にあります。適用先は `~/.local/share/devbox/global/default/devbox.json` です。
+定義は [`dot_local/share/devbox/global/default/devbox.json.tmpl`](dot_local/share/devbox/global/default/devbox.json.tmpl) にあります。適用先は `~/.local/share/devbox/global/default/devbox.json` です。
 
 | 用途 | パッケージ |
 | --- | --- |
-| ランタイム・パッケージ管理 | `nodejs_24`、`bun`、`pnpm`、`uv` |
+| Pythonツールの導入 | `uv` |
 | Web 開発 | `vite-plus`（起動コマンドは `vp`） |
 | Git・ホスティング | `gh`、`glab`、`ghq` |
+| 設定管理 | `chezmoi 2.69.3` |
+| CLI出力の圧縮 | `rtk 0.43.0` |
+| Markdown閲覧 | `mo 1.6.7`。k1LoW版の公式配布物 |
+| クラウド・サービス | `gcloud 559.0.0`、`stripe 1.40.9` |
+| エージェント資材管理 | `apm 0.16.1` |
 | エディタ・ファイル管理 | `helix`、`superfile`（起動コマンドは `spf`） |
 | 検索・移動 | `ripgrep`、`fd`、`fzf`、`zoxide` |
 | コードの構文検索・書き換え | `ast-grep` |
@@ -77,31 +69,33 @@ exec zsh
 | コミット検査 | `prek` |
 | AI 開発支援 | `github-copilot-cli`、`takt` |
 | Web 取得 | `ax` |
+| Issue管理 | `bd 1.0.5`。公式Nix flakeのコミットを固定 |
 
 `herdr`、`takt`、`ax`、`vite-plus` は GitHub の Nix flake を参照します。`direnv` は `2.36.0`、その他の通常パッケージは `latest` を指定しています。Devbox の lockfile はローカル生成で、このリポジトリには含めません。
+
+汎用CLIの版固定、独自Nix定義、確認手順は[汎用CLIの運用手順](docs/GENERAL_CLI.md)を参照してください。
+Azure CLIとTerraformは導入対象から外しています。
 
 ```bash
 devbox global install
 devbox global update
 ```
 
-### Bun global
+### Vite Plusのグローバル環境
 
-定義は [`dot_bun/install/global/package.json`](dot_bun/install/global/package.json) にあります。適用先は `~/.bun/install/global/package.json` です。
-
-| パッケージ | 用途 |
-| --- | --- |
-| `@anthropic-ai/claude-code` | Claude Code |
-| `@hono/cli` | Hono CLI |
-| `@openai/codex` | Codex CLI |
-| `mastracode` | Mastra Code |
-| `@playwright/cli` | ブラウザ操作・自動化 |
-| `wrangler` | Cloudflare Workers などの管理 |
+環境の既定値は[`dot_config/vite-plus/config.json`](dot_config/vite-plus/config.json)にあります。
+CLI一覧は[`dot_config/dev-tools/global-tools.json`](dot_config/dev-tools/global-tools.json)にあります。
+各CLIの名前、固定バージョン、実行用Node.jsを指定します。
 
 ```bash
-jq -r '.dependencies | to_entries[] | "\(.key)@\(.value)"' ~/.bun/install/global/package.json \
-  | xargs bun add --global
+vp-tools --check
+vp-tools
+vp list -g
 ```
+
+一覧にないツールは表示だけ行い、自動削除しません。
+導入済みCLIの版とNode.jsが一致し、パッケージ定義とコマンドの入口が存在する場合は再インストールしません。
+一覧の変更方法と端末の復元は[運用手順](docs/VITE_PLUS.md)を参照してください。
 
 ### Graphify
 
@@ -137,18 +131,16 @@ graphify install --project --platform codex
 
 Devbox の `github:ryoppippi/nix-vite-plus#vp` が standalone の `vp` を導入します。npm のプロジェクト用 `vite-plus` パッケージは global CLI と別のものです。
 
-初回起動では Vite+ がユーザー環境を初期化します。この dotfiles の Zsh では `VP_SELF_SETUP_NO_MODIFY_PATH=1` でシェル設定の自動書き換えを止め、PATH は Devbox で管理します。Devbox の Node.js とパッケージマネージャーを優先するには、次の環境変数を付けて初回起動してください。
-
-```bash
-VP_NODE_MANAGER=no VP_PM_MANAGER=no vp --help
-devbox global update
-```
+Vite Plusが生成する環境設定をDevboxの初期化後に読み込みます。
+`VP_SELF_SETUP_NO_MODIFY_PATH=1`でシェル設定の自動書き換えを止め、読み込み位置をchezmoiで管理します。
+Node.jsとパッケージマネージャーはVite Plusのmanaged modeで選択します。
+Devboxで`vp`本体を更新した場合は`vp-tools`を実行し、shimを更新してください。
 
 ## 設定ファイル
 
 | ファイル | 内容 |
 | --- | --- |
-| `dot_zshenv` | Graphify のクエリログ、Vite+ のシェル設定書き換えを無効化 |
+| `dot_zshenv` | Graphifyのログ設定、Vite Plusの環境初期化、自動設定書き換えの無効化 |
 | `dot_zshrc` | Zsh の初期化、Devbox の PATH、補完、プロンプト |
 | `dot_config/zsh/exports.zsh.tmpl` | `EDITOR=hx`、XDG、npm global の PATH、Linux の Fcitx5 |
 | `dot_config/zsh/aliases.zsh` | eza、bat、Git、chezmoi のエイリアス |

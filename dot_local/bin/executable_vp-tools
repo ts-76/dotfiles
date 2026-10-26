@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode=apply
+if [ "${1:-}" = "--check" ]; then
+  mode=check
+  shift
+fi
+if [ "$#" -gt 1 ]; then
+  printf 'Usage: vp-tools [--check] [global-tools.json]\n' >&2
+  exit 2
+fi
+
+config_root="${XDG_CONFIG_HOME:-$HOME/.config}"
+manifest="${1:-$config_root/dev-tools/global-tools.json}"
+config="${VP_HOME:-$config_root/vite-plus}/config.json"
+devbox_vp="${XDG_DATA_HOME:-$HOME/.local/share}/devbox/global/default/.devbox/nix/profile/default/bin/vp"
+if [ -x "$devbox_vp" ]; then
+  vp_command="$devbox_vp"
+else
+  vp_command="$(command -v vp)"
+fi
+command -v jq >/dev/null
+
+jq -e '
+  def exact: type == "string" and test("^[0-9]+[.][0-9]+[.][0-9]+(-[0-9A-Za-z.-]+)?$");
+  type == "object"
+  and (.packages | type == "array")
+  and all(.packages[];
+    (.name | type == "string" and test("^(@[a-z0-9._-]+/)?[a-z0-9][a-z0-9._-]*$"))
+    and (.version | exact)
+    and (.node | exact))
+  and (([.packages[].name] | unique | length) == (.packages | length))
+' "$manifest" >/dev/null || {
+  printf 'Invalid inventory. Require unique package names and exact version/node values: %s\n' "$manifest" >&2
+  exit 2
+}
+
+jq -e '
+  def exact: type == "string" and test("^[0-9]+[.][0-9]+[.][0-9]+(-[0-9A-Za-z.-]+)?$");
+  (.defaultNodeVersion | exact)
+  and (.nodeShimMode // "managed") == "managed"
+  and (.defaultPackageManagerVersions | type == "object")
+  and all(.defaultPackageManagerVersions | to_entries[];
+    (.key == "npm" or .key == "pnpm" or .key == "bun" or .key == "yarn") and (.value | exact))
+  and (. as $config | all(["npm", "pnpm", "yarn", "bun"][]; $config.packageManagerShimModes[.] == "managed"))
+' "$config" >/dev/null || {
+  printf 'Invalid Vite Plus config. Require managed mode and exact defaults: %s\n' "$config" >&2
+  exit 2
+}
+
+manifest="$(cd "$(dirname "$manifest")" && pwd)/$(basename "$manifest")"
+script="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+cd "$(dirname "$manifest")"
+if [ "$mode" = apply ]; then
+  "$vp_command" env install "node@$(jq -r '.defaultNodeVersion' "$config")"
+  while IFS=$'\t' read -r name version; do
+    "$vp_command" env install "$name@$version"
+  done < <(jq -r '.defaultPackageManagerVersions | to_entries[] | [.key, .value] | @tsv' "$config")
+  "$vp_command" env setup --refresh
+fi
+
+installed="$("$vp_command" list -g --json)"
+jq -e 'type == "array"' <<<"$installed" >/dev/null
+data_dir="${VP_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/vite-plus}"
+missing=0
+while IFS=$'\t' read -r name version node; do
+  entry="$(jq -c --arg name "$name" --arg version "$version" --arg node "$node" '
+    first(.[] | select(.name == $name and .version == $version and .platform.node == $node)) // empty
+  ' <<<"$installed")"
+  complete=0
+  if [ -n "$entry" ]; then
+    install_id="$(jq -r '.installId // ""' <<<"$entry")"
+    package_root="$data_dir/packages/$name"
+    case "$install_id" in
+      "") ;;
+      \#*) package_root="$package_root$install_id" ;;
+      *) package_root="$package_root/$install_id" ;;
+    esac
+    package_json="$package_root/lib/node_modules/$name/package.json"
+    if [ -r "$package_json" ] && jq -e --arg version "$version" '.version == $version' "$package_json" >/dev/null; then
+      complete=1
+      while IFS= read -r bin; do
+        [ -x "$data_dir/bin/$bin" ] || complete=0
+      done < <(jq -r '.bins[]' <<<"$entry")
+    fi
+  fi
+  if [ "$complete" -eq 1 ]; then
+    if [ "$mode" = check ]; then
+      printf 'OK %s@%s (Node %s)\n' "$name" "$version" "$node"
+    fi
+  elif [ "$mode" = check ]; then
+    printf 'MISSING %s@%s (Node %s)\n' "$name" "$version" "$node"
+    missing=1
+  else
+    "$vp_command" install -g --node "$node" "$name@$version"
+    installed="$("$vp_command" list -g --json)"
+    jq -e --arg name "$name" --arg version "$version" --arg node "$node" '
+      any(.[]; .name == $name and .version == $version and .platform.node == $node)
+    ' <<<"$installed" >/dev/null
+  fi
+done < <(jq -r '.packages[] | [.name, .version, .node] | @tsv' "$manifest")
+
+if [ "$mode" = apply ]; then
+  exec bash "$script" --check "$manifest"
+fi
+
+jq -r --slurpfile desired "$manifest" '
+  .[] | . as $pkg
+  | select(all($desired[0].packages[]; .name != $pkg.name))
+  | "UNMANAGED \(.name)@\(.version). Remove explicitly with vp uninstall -g \(.name)"
+' <<<"$installed"
+exit "$missing"

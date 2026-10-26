@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# config {{ include "dot_config/vite-plus/config.json" | sha256sum }}
+# inventory {{ include "dot_config/dev-tools/global-tools.json" | sha256sum }}
+# reconciler {{ include "dot_local/bin/executable_vp-tools" | sha256sum }}
+profile="${XDG_DATA_HOME:-$HOME/.local/share}/devbox/global/default/.devbox/nix/profile/default/bin"
+export PATH="$profile:$HOME/.local/bin:$PATH"
+export VP_SELF_SETUP_NO_MODIFY_PATH=1
+"$HOME/.local/bin/vp-tools"

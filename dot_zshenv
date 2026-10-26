@@ -2,3 +2,5 @@ export GRAPHIFY_QUERY_LOG_DISABLE=1
 
 # Shell profiles and PATH are managed by chezmoi and Devbox.
 export VP_SELF_SETUP_NO_MODIFY_PATH=1
+
+[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/vite-plus/env" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/vite-plus/env"

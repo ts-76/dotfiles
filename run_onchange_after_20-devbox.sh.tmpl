@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# packages {{ include "dot_local/share/devbox/global/default/devbox.json.tmpl" | sha256sum }}
+# flake {{ include "dot_local/share/devbox/global/default/nix/flake.nix" | sha256sum }}
+# inputs {{ include "dot_local/share/devbox/global/default/nix/flake.lock" | sha256sum }}
+# mo {{ include "dot_local/share/devbox/global/default/nix/packages/mo.nix" | sha256sum }}
+# stripe {{ include "dot_local/share/devbox/global/default/nix/packages/stripe.nix" | sha256sum }}
+# apm {{ include "dot_local/share/devbox/global/default/nix/packages/apm.nix" | sha256sum }}
+# gcloud {{ include "dot_local/share/devbox/global/default/nix/packages/gcloud.nix" | sha256sum }}
+devbox global install

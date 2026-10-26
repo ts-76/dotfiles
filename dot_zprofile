@@ -1,0 +1,7 @@
+export PATH="$HOME/.local/bin:$PATH"
+
+
+path=(${path:#$HOME/.bun/bin})
+path=(${path:#$HOME/.local/share/npm/bin})
+path=(${path:#$HOME/.local/share/devbox/global/default/.devbox/virtenv/nodejs_*/corepack-bin})
+[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/vite-plus/env" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/vite-plus/env"

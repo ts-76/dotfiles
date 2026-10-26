@@ -1,0 +1,59 @@
+{{- $flakeHash := output "nix" "hash" "path" (printf "%s/dot_local/share/devbox/global/default/nix" .chezmoi.sourceDir) | trim | urlquery -}}
+{
+  "packages": {
+    "prek": "latest",
+    "helix": "latest",
+    "gh": "latest",
+    "ghq": "latest",
+    "ripgrep": "latest",
+    "ast-grep": "latest",
+    "fd": "latest",
+    "fzf": "latest",
+    "zoxide": "latest",
+    "direnv": "2.36.0",
+    "zsh-powerlevel10k": "latest",
+    "eza": "latest",
+    "bat": "latest",
+    "superfile": "latest",
+    "jq": "latest",
+    "yq": "latest",
+    "github-copilot-cli": "latest",
+    "_1password-cli": "latest",
+    "glab": "latest",
+    "uv": "latest",
+    "xq": "latest",
+    "github:nrslib/takt#default": "",
+    "github:ogulcancelik/herdr#default": "",
+    "github:yusukebe/ax#default": "",
+    "github:ryoppippi/nix-vite-plus#vp": "",
+    "github:gastownhall/beads/6a3f515ced18406c189c55fff789a4925bfaa35c#bd": "",
+    "rtk": "0.43.0",
+    "chezmoi": "2.69.3",
+    "terminal-notifier": "2.0.0",
+    {{ printf "path:%s/.local/share/devbox/global/default/nix?narHash=%s#mo" .chezmoi.homeDir $flakeHash | quote }}: {
+      "version": "",
+      "platforms": [
+        "aarch64-darwin"
+      ]
+    },
+    {{ printf "path:%s/.local/share/devbox/global/default/nix?narHash=%s#stripe" .chezmoi.homeDir $flakeHash | quote }}: {
+      "version": "",
+      "platforms": [
+        "aarch64-darwin"
+      ]
+    },
+    {{ printf "path:%s/.local/share/devbox/global/default/nix?narHash=%s#apm" .chezmoi.homeDir $flakeHash | quote }}: {
+      "version": "",
+      "platforms": [
+        "aarch64-darwin"
+      ]
+    },
+    {{ printf "path:%s/.local/share/devbox/global/default/nix?narHash=%s#gcloud" .chezmoi.homeDir $flakeHash | quote }}: {
+      "version": "",
+      "platforms": [
+        "aarch64-darwin"
+      ]
+    }
+  },
+  "shell": {}
+}
