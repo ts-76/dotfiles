@@ -2,6 +2,20 @@
 
 macOS、Linux、WSL2 向けの CLI・開発環境設定です。chezmoi で設定ファイルを配置し、Devbox と Vite Plus でツールを管理します。Graphify は Devbox の `uv` で導入します。
 
+## リポジトリの構成
+
+```text
+.
+├── .chezmoiroot     # chezmoiの配布元をhome/に指定
+├── home/            # ホームへ配置する設定と導入スクリプト
+├── docs/            # 運用手順
+└── tools/           # 検証とリポジトリ用ツール
+```
+
+chezmoi形式の`dot_`などの名前は`home/`内にまとめています。
+ホームへ配置されるファイル名と場所は変わりません。
+`chezmoi source-path`は`home/`、`chezmoi git`はリポジトリ全体を扱います。
+
 ## セットアップ
 
 Git、chezmoi、Nix、Devbox、Zsh を先にインストールしてください。
@@ -38,7 +52,7 @@ command -v node bun pnpm vp spf herdr
 今回の移行では、Vite Plusの導入後にDevboxの重複ランタイムを整理し、最後にシェルのPATHを切り替えています。
 新しいターミナルで`vp-tools --check`と各CLIの起動を確認してください。
 
-`.chezmoiremove` は、以前管理していた Zellij、Yazi、OpenCode、lazygit、Starship の設定ファイル、Helix の Yazi picker を削除します。対象は列挙したファイルだけです。認証情報やセッションデータ、親ディレクトリは削除しません。
+`home/.chezmoiremove` は、以前管理していた Zellij、Yazi、OpenCode、lazygit、Starship の設定ファイル、Helix の Yazi picker を削除します。対象は列挙したファイルだけです。認証情報やセッションデータ、親ディレクトリは削除しません。
 
 ターミナル管理は `herdr`、ファイル管理は `spf` を起動してください。Helix からのファイル選択は標準の `Space f` を使います。
 
@@ -46,7 +60,7 @@ command -v node bun pnpm vp spf herdr
 
 ### Devbox
 
-定義は [`dot_local/share/devbox/global/default/devbox.json.tmpl`](dot_local/share/devbox/global/default/devbox.json.tmpl) にあります。適用先は `~/.local/share/devbox/global/default/devbox.json` です。
+定義は [`home/dot_local/share/devbox/global/default/devbox.json.tmpl`](home/dot_local/share/devbox/global/default/devbox.json.tmpl) にあります。適用先は `~/.local/share/devbox/global/default/devbox.json` です。
 
 | 用途 | パッケージ |
 | --- | --- |
@@ -67,11 +81,11 @@ command -v node bun pnpm vp spf herdr
 | データ処理 | `jq`、`yq`、`xq` |
 | 認証 | `_1password-cli`（`op`） |
 | コミット検査 | `prek` |
-| AI 開発支援 | `github-copilot-cli`、`takt` |
+| AI 開発支援 | `takt` |
 | Web 取得 | `ax` |
 | Issue管理 | `bd 1.0.5`。公式Nix flakeのコミットを固定 |
 
-`herdr`、`takt`、`ax`、`vite-plus` は GitHub の Nix flake を参照します。`direnv` は `2.36.0`、その他の通常パッケージは `latest` を指定しています。Devbox の lockfile はローカル生成で、このリポジトリには含めません。
+`herdr`、`takt`、`ax`、`vite-plus` は GitHub の Nix flake を参照します。`direnv`、`rtk`、`chezmoi`、`terminal-notifier`は固定バージョンを指定し、その他の通常パッケージは`latest`を指定しています。Devbox の lockfile はローカル生成で、このリポジトリには含めません。
 
 汎用CLIの版固定、独自Nix定義、確認手順は[汎用CLIの運用手順](docs/GENERAL_CLI.md)を参照してください。
 Azure CLIとTerraformは導入対象から外しています。
@@ -83,9 +97,10 @@ devbox global update
 
 ### Vite Plusのグローバル環境
 
-環境の既定値は[`dot_config/vite-plus/config.json`](dot_config/vite-plus/config.json)にあります。
-CLI一覧は[`dot_config/dev-tools/global-tools.json`](dot_config/dev-tools/global-tools.json)にあります。
-各CLIの名前、固定バージョン、実行用Node.jsを指定します。
+環境の既定値は[`home/dot_config/vite-plus/config.json`](home/dot_config/vite-plus/config.json)にあります。
+CLI一覧は[`home/dot_config/dev-tools/global-tools.json`](home/dot_config/dev-tools/global-tools.json)にあります。
+Node.jsの既定値は`lts`を指定します。npm・pnpm・BunはLTSタグがないため固定バージョンを使います。
+CLI一覧では各CLIの名前、固定バージョン、実行用Node.jsを指定します。
 
 ```bash
 vp-tools --check
@@ -99,7 +114,7 @@ vp list -g
 
 ### Graphify
 
-[`dot_local/bin/executable_dot-graphify-install`](dot_local/bin/executable_dot-graphify-install) を `~/.local/bin/dot-graphify-install` として配置します。このスクリプトは `uv tool` で公式パッケージ `graphifyy==0.9.90` を Python 3.12 の環境に導入します。Python 3.12 がない場合は `uv` が取得します。起動コマンドは `graphify` です。
+[`home/dot_local/bin/executable_dot-graphify-install`](home/dot_local/bin/executable_dot-graphify-install) を `~/.local/bin/dot-graphify-install` として配置します。このスクリプトは `uv tool` で公式パッケージ `graphifyy==0.9.90` を Python 3.12 の環境に導入します。Python 3.12 がない場合は `uv` が取得します。起動コマンドは `graphify` です。
 
 ```bash
 ~/.local/bin/dot-graphify-install
@@ -140,20 +155,20 @@ Devboxで`vp`本体を更新した場合は`vp-tools`を実行し、shimを更�
 
 | ファイル | 内容 |
 | --- | --- |
-| `dot_zshenv` | Graphifyのログ設定、Vite Plusの環境初期化、自動設定書き換えの無効化 |
-| `dot_zshrc` | Zsh の初期化、Devbox の PATH、補完、プロンプト |
-| `dot_config/zsh/exports.zsh.tmpl` | `EDITOR=hx`、XDG、npm global の PATH、Linux の Fcitx5 |
-| `dot_config/zsh/aliases.zsh` | eza、bat、Git、chezmoi のエイリアス |
-| `dot_config/zsh/functions.zsh` | fzf のファイル選択などの関数 |
-| `dot_config/zsh/credentials.local.zsh.tmpl` | Git MAIN/SUB の認証情報 |
-| `dot_config/zsh/git-account-auto.zsh` | リポジトリごとのアカウント判定 |
-| `dot_config/zsh/git-account-switch.zsh` | Git・GitHub アカウント切り替え |
-| `dot_config/zsh/gh-onboard.zsh` | GitHub 認証の初期設定 |
-| `dot_p10k.zsh` | Powerlevel10k のプロンプト |
-| `dot_config/helix/config.toml` | Helix のテーマ、行番号、自動保存 |
-| `dot_config/ghostty/config` | Ghostty の設定 |
-| `private_dot_ssh/config.tmpl` | GitHub 向け SSH 設定 |
-| `.chezmoiremove` | 移行時に削除する旧設定ファイルの一覧 |
+| `home/dot_zshenv` | Graphifyのログ設定、Vite Plusの環境初期化、自動設定書き換えの無効化 |
+| `home/dot_zshrc` | Zsh の初期化、Devbox の PATH、補完、プロンプト |
+| `home/dot_config/zsh/exports.zsh.tmpl` | `EDITOR=hx`、XDG、PATH、Linux の Fcitx5 |
+| `home/dot_config/zsh/aliases.zsh` | eza、bat、Git、chezmoi のエイリアス |
+| `home/dot_config/zsh/functions.zsh` | fzf のファイル選択などの関数 |
+| `home/dot_config/zsh/credentials.local.zsh.tmpl` | Git MAIN/SUB の認証情報 |
+| `home/dot_config/zsh/git-account-auto.zsh` | リポジトリごとのアカウント判定 |
+| `home/dot_config/zsh/git-account-switch.zsh` | Git・GitHub アカウント切り替え |
+| `home/dot_config/zsh/gh-onboard.zsh` | GitHub 認証の初期設定 |
+| `home/dot_p10k.zsh` | Powerlevel10k のプロンプト |
+| `home/dot_config/helix/config.toml` | Helix のテーマ、行番号、自動保存 |
+| `home/dot_config/ghostty/config` | Ghostty の設定 |
+| `home/private_dot_ssh/config.tmpl` | GitHub 向け SSH 設定 |
+| `home/.chezmoiremove` | 移行時に削除する旧設定ファイルの一覧 |
 
 superfile と herdr は既定設定を使います。Nix 版の実行名は `superfile` のため、`spf` ラッパーから起動します。ファイル編集には既存の `EDITOR=hx` を使います。
 

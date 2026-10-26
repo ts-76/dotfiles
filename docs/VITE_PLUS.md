@@ -2,13 +2,15 @@
 
 Devboxで汎用CLIとVite Plus本体を導入し、Vite PlusでNode.js、npm、pnpm、BunとJavaScript製CLIを管理する。
 設定の管理元はchezmoiとする。
-現在のchezmoi管理元は `chezmoi source-path` で確認する。標準パスとは限らない。
+現在のchezmoi配布元は`chezmoi source-path`で確認する。このリポジトリでは`home/`を使う。
 
 ## 設定を変更する
 
-- `dot_config/vite-plus/config.json`でNode.jsとパッケージマネージャーの既定バージョンを変更する。
-- `dot_config/dev-tools/global-tools.json`でCLIの名前、固定バージョン、実行用Node.jsを変更する。
-- どちらも完全なバージョンを指定する。`latest`やバージョン範囲は指定しない。
+- `home/dot_config/vite-plus/config.json`でNode.jsとパッケージマネージャーの既定バージョンを変更する。
+- `home/dot_config/dev-tools/global-tools.json`でCLIの名前、固定バージョン、実行用Node.jsを変更する。
+- Node.jsの既定値は`lts`を指定し、最新LTSを選択する。完全なバージョンへの固定もできる。
+- npm・pnpm・BunにはLTSタグがないため、既定値は完全なバージョンで指定する。
+- CLI一覧のバージョンと実行用Node.jsは完全なバージョンで指定する。`lts`、`latest`、バージョン範囲は指定しない。
 
 CLI一覧の例は次のとおり。
 
@@ -33,8 +35,8 @@ Vite PlusにCLI一覧を自動同期する機能を追加するものではな�
 Nix、Devbox、chezmoiを導入してから`chezmoi apply`を実行する。
 Devboxの導入が先に走り、その後でVite Plusの環境とCLIが復元される。
 
-`run_onchange_after_20-devbox.sh.tmpl`はDevbox定義が変わったときに実行する。
-`run_onchange_after_30-vite-plus-tools.sh.tmpl`はVite Plus設定、CLI一覧、復元スクリプトが変わったときに実行する。
+`home/run_onchange_after_20-devbox.sh.tmpl`はDevbox定義が変わったときに実行する。
+`home/run_onchange_after_30-vite-plus-tools.sh.tmpl`はVite Plus設定、CLI一覧、復元スクリプトが変わったときに実行する。
 ネットワークエラーが起きたら原因を解消して再実行する。
 正常に終了するまで、chezmoiはそのスクリプトの完了を記録しない。
 
@@ -50,6 +52,8 @@ Devboxの導入が先に走り、その後でVite Plusの環境とCLIが復元�
 ## プロジェクトごとのバージョンを維持する
 
 グローバル設定は既定値として使う。
+Node.jsの`lts`は固定バージョンではなく、Vite Plusが解決する最新LTSに追従する。
+グローバルCLIの実行用Node.jsはCLI一覧の固定バージョンを使う。
 プロジェクトにNode.jsやパッケージマネージャーの指定があれば、その指定を優先する。
 移行のために既存のlockfileやビルドツールを置き換えない。
 

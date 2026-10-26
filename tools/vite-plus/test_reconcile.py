@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).resolve().parents[2] / "dot_local/bin/executable_vp-tools"
+SCRIPT = Path(__file__).resolve().parents[2] / "home/dot_local/bin/executable_vp-tools"
 FAKE_VP = """#!/usr/bin/env python3
 import json, os, pathlib, sys
 root = pathlib.Path(os.environ["VP_HOME"])
@@ -110,6 +110,45 @@ class ReconcileTests(unittest.TestCase):
         self.desired["packages"][0]["version"] = "1.2.4"
         self.assertEqual(self.run_script().returncode, 0)
         self.assertEqual(json.loads(self.installed.read_text())[0]["version"], "1.2.4")
+
+    def test_lts_default_check_does_not_install(self):
+        self.assertEqual(self.run_script().returncode, 0)
+        self.config["defaultNodeVersion"] = "lts"
+        call_count = len(self.calls())
+        result = self.run_script("--check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("OK @test/cli@1.2.3", result.stdout)
+        self.assertEqual(self.calls()[call_count:], [["list", "-g", "--json"]])
+
+    def test_lts_default_installs_alias_and_preserves_inventory_runtime(self):
+        self.config["defaultNodeVersion"] = "lts"
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(["env", "install", "node@lts"], self.calls())
+        self.assertIn(["install", "-g", "--node", "24.22.1", "@test/cli@1.2.3"], self.calls())
+        self.assertEqual(json.loads(self.installed.read_text())[0]["platform"]["node"], "24.22.1")
+
+    def test_invalid_node_defaults_write_nothing(self):
+        for value in ["latest", "lts/*", "lts/jod", "24", "^24.0.0", "lts\nmalicious", None, 24]:
+            with self.subTest(value=value):
+                self.config["defaultNodeVersion"] = value
+                result = self.run_script()
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertEqual(self.calls(), [])
+
+    def test_package_manager_lts_writes_nothing(self):
+        for manager in ["npm", "pnpm", "bun", "yarn"]:
+            with self.subTest(manager=manager):
+                self.config["defaultPackageManagerVersions"] = {manager: "lts"}
+                result = self.run_script()
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertEqual(self.calls(), [])
+
+    def test_inventory_node_lts_writes_nothing(self):
+        self.desired["packages"][0]["node"] = "lts"
+        result = self.run_script()
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertEqual(self.calls(), [])
 
     def test_missing_package_payload_is_repaired(self):
         self.assertEqual(self.run_script().returncode, 0)

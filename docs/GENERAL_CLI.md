@@ -17,7 +17,7 @@ Azure CLIとTerraformは不要になったため、導入対象から外す。
 | Microsoft APM | 0.16.1 | nix/packages/apm.nix |
 | Google Cloud CLI | 559.0.0 | nix/packages/gcloud.nix |
 
-定義は`dot_local/share/devbox/global/default/`にある。
+定義はリポジトリの`home/dot_local/share/devbox/global/default/`にある。
 独自定義は公式アーカイブのURLとSHA256を固定する。
 `nix/flake.lock`でNixpkgsのリビジョンも固定する。
 独自flakeの公開対象は、現在検証しているApple SiliconのmacOSのみ。

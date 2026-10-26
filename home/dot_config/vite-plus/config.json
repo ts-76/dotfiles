@@ -1,5 +1,5 @@
 {
-  "defaultNodeVersion": "24.22.1",
+  "defaultNodeVersion": "lts",
   "defaultPackageManagerVersions": {
     "bun": "1.4.2",
     "npm": "11.12.1",

@@ -38,14 +38,14 @@ jq -e '
 
 jq -e '
   def exact: type == "string" and test("^[0-9]+[.][0-9]+[.][0-9]+(-[0-9A-Za-z.-]+)?$");
-  (.defaultNodeVersion | exact)
+  (.defaultNodeVersion | . == "lts" or exact)
   and (.nodeShimMode // "managed") == "managed"
   and (.defaultPackageManagerVersions | type == "object")
   and all(.defaultPackageManagerVersions | to_entries[];
     (.key == "npm" or .key == "pnpm" or .key == "bun" or .key == "yarn") and (.value | exact))
   and (. as $config | all(["npm", "pnpm", "yarn", "bun"][]; $config.packageManagerShimModes[.] == "managed"))
 ' "$config" >/dev/null || {
-  printf 'Invalid Vite Plus config. Require managed mode and exact defaults: %s\n' "$config" >&2
+  printf 'Invalid Vite Plus config. Require managed mode, an exact Node.js version or lts, and exact package-manager defaults: %s\n' "$config" >&2
   exit 2
 }
 
