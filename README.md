@@ -26,7 +26,7 @@ chezmoi init --apply https://github.com/ts-76/dotfiles.git
 exec zsh
 ```
 
-`chezmoi apply` は設定ファイルを配置し、変更された定義に応じてDevboxとVite Plusの導入処理を実行します。Graphifyは上記の専用スクリプトで導入してください。
+`chezmoi apply` は設定ファイルを配置し、変更された定義に応じてDevboxとVite Plusの導入処理を実行します。Cursor CLIも未導入なら自動で導入します。Graphifyは上記の専用スクリプトで導入してください。
 
 Vite+ のグローバル CLI `vp` は、[nix-vite-plus](https://github.com/ryoppippi/nix-vite-plus) の Nix flake を Devbox から導入します。現在の flake は Apple Silicon の macOS、x86_64 と aarch64 の Linux に対応しています。WSL2 は Linux として扱います。更新には `devbox global update` を使います。
 
@@ -111,6 +111,20 @@ vp list -g
 一覧にないツールは表示だけ行い、自動削除しません。
 導入済みCLIの版とNode.jsが一致し、パッケージ定義とコマンドの入口が存在する場合は再インストールしません。
 一覧の変更方法と端末の復元は[運用手順](docs/VITE_PLUS.md)を参照してください。
+
+### Cursor CLI
+
+`chezmoi apply` 時に `~/.local/bin/cursor-agent` がなければ、[公式インストーラー](https://cursor.com/install)で最新版を導入します。起動コマンドは `agent`（または `cursor-agent`）です。`~/.local/bin` は既存のPATH設定に含まれています。
+
+更新・再インストールは、dotfilesで配置する専用コマンドを実行してください。バージョンは固定せず、実行時の公式最新版を取得します。
+
+```bash
+~/.local/bin/dot-cursor-install
+cursor-agent --version
+agent
+```
+
+インストーラーはダウンロード完了後に実行します。認証情報はdotfilesの管理対象に含めません。
 
 ### Graphify
 

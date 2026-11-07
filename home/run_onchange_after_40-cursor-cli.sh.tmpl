@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# installer {{ include "dot_local/bin/executable_dot-cursor-install" | sha256sum }}
+
+if [[ ! -x "$HOME/.local/bin/cursor-agent" ]]; then
+  "$HOME/.local/bin/dot-cursor-install"
+fi
