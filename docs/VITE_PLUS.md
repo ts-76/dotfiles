@@ -93,3 +93,19 @@ dotfilesの管理元で`python3 tools/vite-plus/test_reconcile.py`を実行す�
 `bd 1.0.5`はDevboxで公式Nix flakeのコミット`6a3f515ced18406c189c55fff789a4925bfaa35c`を固定して導入する。
 npmの`@beads/bd@1.0.5`はGitHubに存在しないバイナリ配布物を参照するため、Vite Plusの一覧には入れない。
 このコミットは移行前の実行ファイルのビルドコミットと一致する。
+
+## 起動リンクが切れた場合
+
+Nixの旧ストアを参照するリンクが残ると、パッケージ本体が存在していても起動できない。
+`vp-tools`はshimを生成した後、旧Nixストアへのリンク切れを修復する。
+`vp`の入口はDevboxのプロファイルを参照させ、本体の管理をDevboxに揃える。
+`vp upgrade`で別の本体を導入せず、更新は`devbox global update`、続いて`vp-tools`を実行する。
+
+CLIを個別に更新した場合は、`vp list -g --json`でバージョンと`platform.node`を確認し、
+chezmoi管理元の`global-tools.json`にも反映する。台帳が古いまま`vp-tools`を実行すると台帳の版へ戻る。
+
+## npmの旧グローバル環境
+
+旧`~/.local/share/npm`は2026-11-13に保管領域へ移動した。
+`agent-browser 0.43.0`を含むグローバルCLIはVite+で管理する。
+`.npmrc`の旧prefix指定は削除済み。グローバルCLIの導入には`vp install -g`を使い、導入後は台帳にも反映する。

@@ -165,6 +165,22 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(self.run_script().returncode, 0)
         self.assertTrue((self.root / "bin/test-cli").is_file())
 
+    def test_dangling_nix_shim_is_repaired_without_reinstall(self):
+        self.assertEqual(self.run_script().returncode, 0)
+        binary = self.root / "bin/test-cli"
+        binary.unlink()
+        binary.symlink_to("/nix/store/removed-vite-plus/bin/.vp-wrapped")
+        wrapper = self.root / ".vp-wrapped"
+        wrapper.write_text("#!/bin/sh\nexit 0\n")
+        wrapper.chmod(0o755)
+        (self.root / "bin/vpx").symlink_to(wrapper)
+        self.assertEqual(self.run_script("--check").returncode, 1)
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(binary.resolve(), wrapper.resolve())
+        installs = [args for args in self.calls() if args[:2] == ["install", "-g"]]
+        self.assertEqual(len(installs), 1)
+
     def test_node_change_reinstalls(self):
         self.assertEqual(self.run_script().returncode, 0)
         self.desired["packages"][0]["node"] = "22.20.0"

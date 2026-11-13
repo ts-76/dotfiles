@@ -2,13 +2,13 @@
   "packages": [
     {
       "name": "@anthropic-ai/claude-code",
-      "version": "2.1.308",
-      "node": "24.22.1"
+      "version": "2.1.323",
+      "node": "26.13.1"
     },
     {
       "name": "@openai/codex",
-      "version": "0.163.0",
-      "node": "24.22.1"
+      "version": "0.167.2",
+      "node": "26.13.1"
     },
     {
       "name": "@hono/cli",
@@ -32,7 +32,7 @@
     },
     {
       "name": "agent-browser",
-      "version": "0.19.0",
+      "version": "0.43.0",
       "node": "24.22.1"
     },
     {

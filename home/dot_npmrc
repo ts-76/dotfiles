@@ -1,1 +1,1 @@
-prefix=${HOME}/.local/share/npm
+# Global CLI tools are managed with vp install -g and the dev-tools inventory.
