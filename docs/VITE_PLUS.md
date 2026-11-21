@@ -7,35 +7,31 @@ Devboxで汎用CLIとVite Plus本体を導入し、Vite PlusでNode.js、npm、p
 ## 設定を変更する
 
 - `home/dot_config/vite-plus/config.json`でNode.jsとパッケージマネージャーの既定バージョンを変更する。
-- `home/dot_config/dev-tools/global-tools.json`でCLIの名前、固定バージョン、実行用Node.jsを変更する。
+- `tools.yaml` の対象カテゴリの `vitePlus` で CLI の名前、固定バージョン、実行用 Node.js を変更する。 [カテゴリ別の定義](../home/.chezmoidata/tools.yaml)
 - Node.jsの既定値は`lts`を指定し、最新LTSを選択する。完全なバージョンへの固定もできる。
 - npm・pnpm・BunにはLTSタグがないため、既定値は完全なバージョンで指定する。
 - CLI一覧のバージョンと実行用Node.jsは完全なバージョンで指定する。`lts`、`latest`、バージョン範囲は指定しない。
 
-CLI一覧の例は次のとおり。
+たとえば、Codex は `toolCategories` の下で次のように定義する。
 
-```json
-{
-  "packages": [
-    {
-      "name": "@openai/codex",
-      "version": "0.163.0",
-      "node": "24.22.1"
-    }
-  ]
-}
+```yaml
+  ai:
+    vitePlus:
+      - name: "@openai/codex"
+        version: "0.167.2"
+        node: "26.13.1"
 ```
 
 `config.json`はVite Plusの設定ファイル。
-`global-tools.json`は、このdotfiles専用の導入一覧。
-Vite PlusにCLI一覧を自動同期する機能を追加するものではない。
+chezmoi は各カテゴリの `vitePlus` をまとめて `~/.config/dev-tools/global-tools.json` を生成する。
+`vp-tools` は生成された導入一覧を読み込む。
 
 ## 端末へ適用する
 
 Nix、Devbox、chezmoiを導入してから`chezmoi apply`を実行する。
 Devboxの導入が先に走り、その後でVite Plusの環境とCLIが復元される。
 
-`home/run_onchange_after_20-devbox.sh.tmpl`はDevbox定義が変わったときに実行する。
+`home/run_onchange_after_20-devbox.sh.tmpl`は生成したDevbox設定が変わったときに実行する。
 `home/run_onchange_after_30-vite-plus-tools.sh.tmpl`はVite Plus設定、CLI一覧、復元スクリプトが変わったときに実行する。
 ネットワークエラーが起きたら原因を解消して再実行する。
 正常に終了するまで、chezmoiはそのスクリプトの完了を記録しない。
@@ -102,7 +98,7 @@ Nixの旧ストアを参照するリンクが残ると、パッケージ本体�
 `vp upgrade`で別の本体を導入せず、更新は`devbox global update`、続いて`vp-tools`を実行する。
 
 CLIを個別に更新した場合は、`vp list -g --json`でバージョンと`platform.node`を確認し、
-chezmoi管理元の`global-tools.json`にも反映する。台帳が古いまま`vp-tools`を実行すると台帳の版へ戻る。
+`tools.yaml` の該当カテゴリにも反映する。適用した一覧が古いまま `vp-tools` を実行すると一覧の版へ戻る。
 
 ## npmの旧グローバル環境
 

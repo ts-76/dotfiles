@@ -1,0 +1,7 @@
+{{- $packages := list -}}
+{{- range .toolCategories -}}
+  {{- with index . "vitePlus" -}}
+    {{- $packages = concat $packages . -}}
+  {{- end -}}
+{{- end -}}
+{{ dict "packages" $packages | mustToPrettyJson }}

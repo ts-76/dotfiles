@@ -56,36 +56,25 @@ command -v node bun pnpm vp spf herdr
 
 ターミナル管理は `herdr`、ファイル管理は `spf` を起動してください。Helix からのファイル選択は標準の `Space f` を使います。
 
-## ツールの管理元
+## カテゴリ別のツール管理
+
+CLI の追加・更新は `tools.yaml` の用途別カテゴリで行います。Devbox のパッケージ名や外部 flake 参照は `devbox`、リポジトリ内の Nix flake は `devboxLocal`、Vite Plus で導入する npm パッケージは `vitePlus` に記入します。 [カテゴリ別の定義](home/.chezmoidata/tools.yaml)
+
+| カテゴリ | 主なツール | 専用の導入手順・設定 |
+| --- | --- | --- |
+| AI・エージェント開発 (`ai`) | Claude Code、Codex、MastraCode、TAKT、APM、RTK | [Cursor CLI](#cursor-cli)、[Graphify](#graphify) |
+| ブラウザ操作・Web 取得 (`browser`) | agent-browser、ax | |
+| クラウド・外部サービス (`cloud`) | Google Cloud CLI、Stripe CLI、Wrangler、cf | |
+| データ処理 (`data`) | jq、yq、xq | |
+| 開発環境・ランタイム (`development`) | Vite Plus、uv、Hono CLI、Dev Containers CLI、Portless | [Node.js・npm・pnpm・Bun の既定値](docs/VITE_PLUS.md#設定を変更する) |
+| エディタ・ファイル・検索 (`editor-and-files`) | Helix、superfile、mo、ripgrep、ast-grep、fd、fzf、eza、bat | [キーバインド](docs/KEYBINDINGS.md) |
+| Git・課題管理 (`git`) | gh、glab、ghq、prek、bd | [Git・GitHub の設定](docs/CREDENTIALS_SETUP.md)、[SSH の設定](docs/CREDENTIALS_SSH_SETUP.md) |
+| 認証 (`security`) | 1Password CLI (`op`) | |
+| シェル・ターミナル (`shell-and-terminal`) | chezmoi、direnv、zoxide、Powerlevel10k、herdr | [Zsh・Bash・Ghostty の設定](#設定ファイル) |
 
 ### Devbox
 
-定義は [`home/dot_local/share/devbox/global/default/devbox.json.tmpl`](home/dot_local/share/devbox/global/default/devbox.json.tmpl) にあります。適用先は `~/.local/share/devbox/global/default/devbox.json` です。
-
-| 用途 | パッケージ |
-| --- | --- |
-| Pythonツールの導入 | `uv` |
-| Web 開発 | `vite-plus`（起動コマンドは `vp`） |
-| Git・ホスティング | `gh`、`glab`、`ghq` |
-| 設定管理 | `chezmoi 2.69.3` |
-| CLI出力の圧縮 | `rtk 0.43.0` |
-| Markdown閲覧 | `mo 1.6.7`。k1LoW版の公式配布物 |
-| クラウド・サービス | `gcloud 559.0.0`、`stripe 1.40.9` |
-| エージェント資材管理 | `apm 0.16.1` |
-| エディタ・ファイル管理 | `helix`、`superfile`（起動コマンドは `spf`） |
-| 検索・移動 | `ripgrep`、`fd`、`fzf`、`zoxide` |
-| コードの構文検索・書き換え | `ast-grep` |
-| シェル・環境 | `zsh-powerlevel10k`、`direnv` |
-| ファイル表示 | `eza`、`bat` |
-| ターミナル管理 | `herdr` |
-| データ処理 | `jq`、`yq`、`xq` |
-| 認証 | `_1password-cli`（`op`） |
-| コミット検査 | `prek` |
-| AI 開発支援 | `takt` |
-| Web 取得 | `ax` |
-| Issue管理 | `bd 1.0.5`。公式Nix flakeのコミットを固定 |
-
-`herdr`、`takt`、`ax`、`vite-plus` は GitHub の Nix flake を参照します。`direnv`、`rtk`、`chezmoi`、`terminal-notifier`は固定バージョンを指定し、その他の通常パッケージは`latest`を指定しています。Devbox の lockfile はローカル生成で、このリポジトリには含めません。
+chezmoi は各カテゴリの `devbox` と `devboxLocal` をまとめ、`~/.local/share/devbox/global/default/devbox.json` に配置します。Devbox の lockfile はローカルで生成します。
 
 汎用CLIの版固定、独自Nix定義、確認手順は[汎用CLIの運用手順](docs/GENERAL_CLI.md)を参照してください。
 Azure CLIとTerraformは導入対象から外しています。
@@ -98,7 +87,7 @@ devbox global update
 ### Vite Plusのグローバル環境
 
 環境の既定値は[`home/dot_config/vite-plus/config.json`](home/dot_config/vite-plus/config.json)にあります。
-CLI一覧は[`home/dot_config/dev-tools/global-tools.json`](home/dot_config/dev-tools/global-tools.json)にあります。
+chezmoi は各カテゴリの `vitePlus` をまとめ、`~/.config/dev-tools/global-tools.json` に配置します。
 Node.jsの既定値は`lts`を指定します。npm・pnpm・BunはLTSタグがないため固定バージョンを使います。
 CLI一覧では各CLIの名前、固定バージョン、実行用Node.jsを指定します。
 
@@ -139,22 +128,31 @@ graphify --help
 
 Graphify 0.9.90 のローカルクエリログは初期状態で無効です。この dotfiles でも `~/.zshenv` に `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定し、対話・非対話の Zsh で `GRAPHIFY_QUERY_LOG_ENABLE` やログ保存先の指定があっても記録を無効にします。シェルの環境変数を引き継がない MCP クライアントで Graphify を使う場合は、MCP サーバーの環境変数にも `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定してください。この設定は API 呼び出しなどのネットワーク通信を無効にするものではありません。
 
-コードのみの解析には API キーは不要です。解析対象のリポジトリで次のコマンドを実行します。グラフの出力は各リポジトリの `graphify-out/` に保存します。
+#### コードと文書を解析する
 
-```bash
-graphify extract . --code-only
-graphify cluster-only . --no-label
-graphify query "authentication flow"
-graphify update .
-```
-
-Codex のスキル連携が必要なリポジトリでは、次のコマンドを追加で実行します。
+Codex で解析するリポジトリのルートで、Graphify スキルを登録します。
 
 ```bash
 graphify install --project --platform codex
 ```
 
-登録処理はリポジトリ内のスキル・指示ファイルやフックを変更します。変更内容を確認してからコミットしてください。CLI の導入スクリプトはスキル登録やグラフ生成を実行しません。他のエージェントとの連携は [Graphify の連携ガイド](https://docs.graphify.com/integrations/overview) を参照してください。
+登録処理はリポジトリ内のスキル・指示ファイルやフックを変更します。変更内容を確認してからコミットしてください。
+
+対象リポジトリを Codex で開き、次の入力でコードと README、設計書などの文書からグラフを作成します。
+
+```text
+$graphify .
+```
+
+文書の内容は意味解析のために Codex が使用しているモデルへ渡ります。グラフはリポジトリの `graphify-out/` に保存されます。変更を反映するときは Codex で `$graphify . --update` を実行します。 [Graphify 0.9.90 のドキュメント](https://pypi.org/project/graphifyy/0.9.90/)
+
+ターミナルからグラフを検索することもできます。
+
+```bash
+graphify query "authentication flow"
+```
+
+ターミナルからグラフを作る場合は、文書の意味解析用のバックエンドを準備し、`graphify extract .` の `--backend` で指定します。 [Graphify のバックエンド設定](https://docs.graphify.com/open-source/configuration/llm-providers)・[エージェントとの連携](https://docs.graphify.com/integrations/overview)
 
 ### Vite+
 

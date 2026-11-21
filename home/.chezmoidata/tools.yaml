@@ -1,0 +1,92 @@
+# カテゴリごとに、導入元別のパッケージとバージョンを定義する。
+toolCategories:
+  ai:
+    devbox:
+      "github:nrslib/takt#default": ""
+      rtk: "0.43.0"
+    devboxLocal:
+      apm: [aarch64-darwin]
+    vitePlus:
+      - name: "@anthropic-ai/claude-code"
+        version: "2.1.323"
+        node: "26.13.1"
+      - name: "@openai/codex"
+        version: "0.167.2"
+        node: "26.13.1"
+      - name: mastracode
+        version: "0.9.2"
+        node: "24.22.1"
+
+  browser:
+    devbox:
+      "github:yusukebe/ax#default": ""
+    vitePlus:
+      - name: agent-browser
+        version: "0.43.0"
+        node: "24.22.1"
+
+  cloud:
+    devboxLocal:
+      gcloud: [aarch64-darwin]
+      stripe: [aarch64-darwin]
+    vitePlus:
+      - name: wrangler
+        version: "4.151.3"
+        node: "24.22.1"
+      - name: cf
+        version: "1.0.0-beta.12"
+        node: "24.22.1"
+
+  data:
+    devbox:
+      jq: latest
+      yq: latest
+      xq: latest
+
+  development:
+    devbox:
+      uv: latest
+      "github:ryoppippi/nix-vite-plus#vp": ""
+    vitePlus:
+      - name: "@hono/cli"
+        version: "0.1.11"
+        node: "24.22.1"
+      - name: "@devcontainers/cli"
+        version: "0.84.1"
+        node: "24.22.1"
+      - name: portless
+        version: "0.15.5"
+        node: "24.22.1"
+
+  editor-and-files:
+    devbox:
+      helix: latest
+      superfile: latest
+      ripgrep: latest
+      ast-grep: latest
+      fd: latest
+      fzf: latest
+      eza: latest
+      bat: latest
+    devboxLocal:
+      mo: [aarch64-darwin]
+
+  git:
+    devbox:
+      gh: latest
+      glab: latest
+      ghq: latest
+      prek: latest
+      "github:gastownhall/beads/6a3f515ced18406c189c55fff789a4925bfaa35c#bd": ""
+
+  security:
+    devbox:
+      _1password-cli: latest
+
+  shell-and-terminal:
+    devbox:
+      chezmoi: "2.69.3"
+      direnv: "2.36.0"
+      zoxide: latest
+      zsh-powerlevel10k: latest
+      "github:ogulcancelik/herdr#default": ""
