@@ -2,7 +2,6 @@
 toolCategories:
   ai:
     devbox:
-      "github:nrslib/takt#default": ""
       rtk: "0.43.0"
     devboxLocal:
       apm: [aarch64-darwin]
@@ -77,7 +76,7 @@ toolCategories:
       glab: latest
       ghq: latest
       prek: latest
-      "github:gastownhall/beads/6a3f515ced18406c189c55fff789a4925bfaa35c#bd": ""
+      "github:NixOS/nixpkgs/b6c8664de9b6cc07fe5666a29f91884ba81197c4#beads": ""
 
   security:
     devbox:
@@ -89,4 +88,3 @@ toolCategories:
       direnv: "2.36.0"
       zoxide: latest
       zsh-powerlevel10k: latest
-      "github:ogulcancelik/herdr#default": ""

@@ -43,7 +43,7 @@ wrangler --version
 hono --help
 ast-grep --version
 graphify --help
-command -v node bun pnpm vp spf herdr
+command -v node bun pnpm vp spf
 ```
 
 ## 既存環境を移行する
@@ -54,7 +54,7 @@ command -v node bun pnpm vp spf herdr
 
 `home/.chezmoiremove` は、以前管理していた Zellij、Yazi、OpenCode、lazygit、Starship の設定ファイル、Helix の Yazi picker を削除します。対象は列挙したファイルだけです。認証情報やセッションデータ、親ディレクトリは削除しません。
 
-ターミナル管理は `herdr`、ファイル管理は `spf` を起動してください。Helix からのファイル選択は標準の `Space f` を使います。
+ファイル管理には `spf` を使います。Helix からのファイル選択は標準の `Space f` を使います。
 
 ## カテゴリ別のツール管理
 
@@ -62,7 +62,7 @@ CLI の追加・更新は `tools.yaml` の用途別カテゴリで行います�
 
 | カテゴリ | 主なツール | 専用の導入手順・設定 |
 | --- | --- | --- |
-| AI・エージェント開発 (`ai`) | Claude Code、Codex、MastraCode、TAKT、APM、RTK | [Cursor CLI](#cursor-cli)、[Graphify](#graphify) |
+| AI・エージェント開発 (`ai`) | Claude Code、Codex、MastraCode、APM、RTK | [Cursor CLI](#cursor-cli)、[Graphify](#graphify) |
 | ブラウザ操作・Web 取得 (`browser`) | agent-browser、ax | |
 | クラウド・外部サービス (`cloud`) | Google Cloud CLI、Stripe CLI、Wrangler、cf | |
 | データ処理 (`data`) | jq、yq、xq | |
@@ -70,7 +70,7 @@ CLI の追加・更新は `tools.yaml` の用途別カテゴリで行います�
 | エディタ・ファイル・検索 (`editor-and-files`) | Helix、superfile、mo、ripgrep、ast-grep、fd、fzf、eza、bat | [キーバインド](docs/KEYBINDINGS.md) |
 | Git・課題管理 (`git`) | gh、glab、ghq、prek、bd | [Git・GitHub の設定](docs/CREDENTIALS_SETUP.md)、[SSH の設定](docs/CREDENTIALS_SSH_SETUP.md) |
 | 認証 (`security`) | 1Password CLI (`op`) | |
-| シェル・ターミナル (`shell-and-terminal`) | chezmoi、direnv、zoxide、Powerlevel10k、herdr | [Zsh・Bash・Ghostty の設定](#設定ファイル) |
+| シェル・ターミナル (`shell-and-terminal`) | chezmoi、direnv、zoxide、Powerlevel10k | [Zsh・Bash・Ghostty の設定](#設定ファイル) |
 
 ### Devbox
 
@@ -182,7 +182,7 @@ Devboxで`vp`本体を更新した場合は`vp-tools`を実行し、shimを更�
 | `home/private_dot_ssh/config.tmpl` | GitHub 向け SSH 設定 |
 | `home/.chezmoiremove` | 移行時に削除する旧設定ファイルの一覧 |
 
-superfile と herdr は既定設定を使います。Nix 版の実行名は `superfile` のため、`spf` ラッパーから起動します。ファイル編集には既存の `EDITOR=hx` を使います。
+superfile は既定設定を使います。Nix 版の実行名は `superfile` のため、`spf` ラッパーから起動します。ファイル編集には既存の `EDITOR=hx` を使います。
 
 対話的な Bash は Zsh へ委譲します。非対話的な Bash は通常どおり動作します。補完、プロンプト、Devbox、direnv、zoxide の初期化は Zsh にまとめています。
 
@@ -194,7 +194,6 @@ chezmoi diff
 chezmoi apply
 chezmoi edit ~/.zshrc
 
-herdr
 spf
 fe                      # fzf でファイルを選び、EDITOR（hx）で開く
 mkcd <dir>
@@ -222,7 +221,6 @@ prek run --all-files
 - [Git・GitHub の認証情報設定](docs/CREDENTIALS_SETUP.md)
 - [SSH の設定](docs/CREDENTIALS_SSH_SETUP.md)
 - [キーバインド](docs/KEYBINDINGS.md)
-- [herdr の使い方](https://herdr.dev/docs/)
 - [superfile のキーバインド](https://superfile.dev/list/hotkeys-list/)
 - [Vite+ のセットアップ](https://viteplus.dev/guide/)
 - [Wrangler のドキュメント](https://developers.cloudflare.com/workers/wrangler/)

@@ -84,11 +84,10 @@ dotfilesの管理元で`python3 tools/vite-plus/test_reconcile.py`を実行す�
 
 公式仕様は[環境管理](https://viteplus.dev/guide/env)と[グローバルパッケージ管理](https://viteplus.dev/guide/package-management)を参照する。
 
-## bdのバージョンを維持する
+## bdを導入する
 
-`bd 1.0.5`はDevboxで公式Nix flakeのコミット`6a3f515ced18406c189c55fff789a4925bfaa35c`を固定して導入する。
-npmの`@beads/bd@1.0.5`はGitHubに存在しないバイナリ配布物を参照するため、Vite Plusの一覧には入れない。
-このコミットは移行前の実行ファイルのビルドコミットと一致する。
+`bd 1.3.0` は Devbox から Nixpkgs の `beads` を使って導入する。
+`tools.yaml` の `git` カテゴリで Nixpkgs のリビジョンを固定する。Apple Silicon ではこのリビジョンの本体と依存を Nix の公式バイナリキャッシュから取得できる。
 
 ## 起動リンクが切れた場合
 
