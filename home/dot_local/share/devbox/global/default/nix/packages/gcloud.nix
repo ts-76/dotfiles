@@ -10,7 +10,7 @@
 }:
 
 let
-  version = "559.0.0";
+  version = "594.0.0";
   pythonEnv = python313.withPackages (ps: [
     ps.cffi
     ps.cryptography
@@ -21,10 +21,10 @@ let
   ]);
   componentIndex = fetchurl {
     url = "https://dl.google.com/dl/cloudsdk/channels/rapid/components-v${version}.json";
-    sha256 = "74ee0204b4aeec073e5c0f27b398cf51f94fcf5216c4315e6e21290364f23f96";
+    sha256 = "b7e357c5cafb6e4849724418dd70925f78b0d30a7b07d0e32b3bb126d184137e";
   };
   alpha = fetchurl {
-    url = "https://dl.google.com/dl/cloudsdk/channels/rapid/components/google-cloud-sdk-alpha-20260227192638.tar.gz";
+    url = "https://dl.google.com/dl/cloudsdk/channels/rapid/components/google-cloud-sdk-alpha-20261113082344.tar.gz";
     sha256 = "73eeb0b0222c8c72ce1cbba3c2ca787d7d89eabc5226463fd59a404f76280138";
   };
 in
@@ -34,7 +34,7 @@ stdenvNoCC.mkDerivation {
 
   src = fetchurl {
     url = "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${version}-darwin-arm.tar.gz";
-    sha256 = "4ce6a1d03a2cd20f855d473c79d17cf2e2fcfafc7bee73e7328c64237fcf0323";
+    sha256 = "45fbcc5a2caf9ec43847383d2f9fe4720eb8a650349be8d9bd271bdfb6912b55";
   };
 
   nativeBuildInputs = [ makeWrapper jq ];

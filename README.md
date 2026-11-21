@@ -117,7 +117,7 @@ agent
 
 ### Graphify
 
-[`home/dot_local/bin/executable_dot-graphify-install`](home/dot_local/bin/executable_dot-graphify-install) を `~/.local/bin/dot-graphify-install` として配置します。このスクリプトは `uv tool` で公式パッケージ `graphifyy==0.9.90` を Python 3.12 の環境に導入します。Python 3.12 がない場合は `uv` が取得します。起動コマンドは `graphify` です。
+[`home/dot_local/bin/executable_dot-graphify-install`](home/dot_local/bin/executable_dot-graphify-install) を `~/.local/bin/dot-graphify-install` として配置します。このスクリプトは `uv tool` で公式パッケージ `graphifyy==0.9.114` を Python 3.12 の環境に導入します。Python 3.12 がない場合は `uv` が取得します。起動コマンドは `graphify` です。
 
 ```bash
 ~/.local/bin/dot-graphify-install
@@ -126,7 +126,7 @@ graphify --help
 
 更新する場合は、スクリプトのバージョン指定を変更して再実行してください。バージョンを固定しているため、`uv tool upgrade graphifyy` では更新しません。
 
-Graphify 0.9.90 のローカルクエリログは初期状態で無効です。この dotfiles でも `~/.zshenv` に `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定し、対話・非対話の Zsh で `GRAPHIFY_QUERY_LOG_ENABLE` やログ保存先の指定があっても記録を無効にします。シェルの環境変数を引き継がない MCP クライアントで Graphify を使う場合は、MCP サーバーの環境変数にも `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定してください。この設定は API 呼び出しなどのネットワーク通信を無効にするものではありません。
+Graphify 0.9.114 のローカルクエリログは初期状態で無効です。この dotfiles でも `~/.zshenv` に `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定し、対話・非対話の Zsh で `GRAPHIFY_QUERY_LOG_ENABLE` やログ保存先の指定があっても記録を無効にします。シェルの環境変数を引き継がない MCP クライアントで Graphify を使う場合は、MCP サーバーの環境変数にも `GRAPHIFY_QUERY_LOG_DISABLE=1` を設定してください。この設定は API 呼び出しなどのネットワーク通信を無効にするものではありません。
 
 #### コードと文書を解析する
 
@@ -144,7 +144,7 @@ graphify install --project --platform codex
 $graphify .
 ```
 
-文書の内容は意味解析のために Codex が使用しているモデルへ渡ります。グラフはリポジトリの `graphify-out/` に保存されます。変更を反映するときは Codex で `$graphify . --update` を実行します。 [Graphify 0.9.90 のドキュメント](https://pypi.org/project/graphifyy/0.9.90/)
+文書の内容は意味解析のために Codex が使用しているモデルへ渡ります。グラフはリポジトリの `graphify-out/` に保存されます。変更を反映するときは Codex で `$graphify . --update` を実行します。 [Graphify 0.9.114 のドキュメント](https://pypi.org/project/graphifyy/0.9.114/)
 
 ターミナルからグラフを検索することもできます。
 

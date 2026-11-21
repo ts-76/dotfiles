@@ -18,7 +18,7 @@ Devboxで汎用CLIとVite Plus本体を導入し、Vite PlusでNode.js、npm、p
   ai:
     vitePlus:
       - name: "@openai/codex"
-        version: "0.167.2"
+        version: "0.171.0"
         node: "26.13.1"
 ```
 
@@ -86,8 +86,8 @@ dotfilesの管理元で`python3 tools/vite-plus/test_reconcile.py`を実行す�
 
 ## bdを導入する
 
-`bd 1.3.0` は Devbox から Nixpkgs の `beads` を使って導入する。
-`tools.yaml` の `git` カテゴリで Nixpkgs のリビジョンを固定する。Apple Silicon ではこのリビジョンの本体と依存を Nix の公式バイナリキャッシュから取得できる。
+`bd 1.3.4` は Devbox から Nixpkgs の `beads` を使って導入する。
+`tools.yaml` の `git` カテゴリでパッケージのバージョンを固定する。Apple Silicon 版は Devbox のパッケージ索引で解決し、Nix の公式バイナリキャッシュから取得する。
 
 ## 起動リンクが切れた場合
 

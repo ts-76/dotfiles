@@ -7,18 +7,18 @@
 let
   sources = {
     aarch64-darwin = {
-      url = "https://github.com/microsoft/apm/releases/download/v0.16.1/apm-darwin-arm64.tar.gz";
-      sha256 = "57771452f017aba208351ab1d0b384273c463faf2bb4516c94eba422a4fe028d";
+      url = "https://github.com/microsoft/apm/releases/download/v0.37.0/apm-darwin-arm64.tar.gz";
+      sha256 = "f745692f886969bd4e8ed54c265214098fd014cf33e8856488528d13f6a6b590";
     };
     x86_64-darwin = {
-      url = "https://github.com/microsoft/apm/releases/download/v0.16.1/apm-darwin-x86_64.tar.gz";
-      sha256 = "96f04ea961ea0bf3885906fb6475695347a6de5d6ff2c46d3e641453e7c68ae9";
+      url = "https://github.com/microsoft/apm/releases/download/v0.37.0/apm-darwin-x86_64.tar.gz";
+      sha256 = "e787df8210a8be413c2f373b2cbf56d65f9d5ed5e0a8bd3413ece17ac9489d89";
     };
   };
 in
 stdenvNoCC.mkDerivation {
   pname = "microsoft-apm";
-  version = "0.16.1";
+  version = "0.37.0";
 
   src = fetchurl sources.${stdenvNoCC.hostPlatform.system};
   nativeBuildInputs = [ makeWrapper ];

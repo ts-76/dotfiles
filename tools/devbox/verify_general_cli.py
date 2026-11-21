@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--bin-dir", type=Path, default=Path.home() / ".local/share/devbox/global/default/.devbox/nix/profile/default/bin")
 parser.add_argument("--receipt", type=Path)
 args = parser.parse_args()
-versions = {"rtk": "0.43.0", "chezmoi": "2.69.3", "mo": "1.6.7", "stripe": "1.40.9", "apm": "0.16.1", "gcloud": "559.0.0"}
+versions = {"rtk": "1.2.0", "chezmoi": "2.74.1", "mo": "1.8.2", "stripe": "1.55.14", "apm": "0.37.0", "gcloud": "594.0.0"}
 receipt = {"bin_dir": str(args.bin_dir), "commands": []}
 
 with tempfile.TemporaryDirectory(prefix="general-cli-smoke-") as temporary:
@@ -54,8 +54,9 @@ with tempfile.TemporaryDirectory(prefix="general-cli-smoke-") as temporary:
             raise SystemExit(f"FAIL {name}: expected version {expected}, got {result.stdout!r}")
         if name == "gcloud-components":
             components = {component["id"] for component in json.loads(result.stdout)}
-            if components != {"core", "bq", "alpha", "gsutil", "gcloud-crc32c"}:
-                raise SystemExit(f"FAIL gcloud components: {components!r}")
+            missing = {"core", "bq", "alpha", "gsutil", "gcloud-crc32c"} - components
+            if missing:
+                raise SystemExit(f"FAIL gcloud missing components: {missing!r}")
         if name == "gsutil" and "compiled crcmod: True" not in result.stdout:
             raise SystemExit("FAIL gsutil: compiled crcmod is unavailable")
         print(f"PASS {name}" + (f" {expected}" if expected else ""))

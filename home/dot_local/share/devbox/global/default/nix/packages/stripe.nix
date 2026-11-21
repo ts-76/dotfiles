@@ -6,18 +6,18 @@
 let
   sources = {
     aarch64-darwin = {
-      url = "https://github.com/stripe/stripe-cli/releases/download/v1.40.9/stripe_1.40.9_mac-os_arm64.tar.gz";
-      sha256 = "0efd6180c323fb8d5c26e4006ff8129c5cc44ca02541c3abde335bff15dc1759";
+      url = "https://github.com/stripe/stripe-cli/releases/download/v1.55.14/stripe_1.55.14_mac-os_arm64.tar.gz";
+      sha256 = "97033ee87ab676b40213a19a71e40b5c22df924063ca1ec3edfe4aed155c8a15";
     };
     x86_64-darwin = {
-      url = "https://github.com/stripe/stripe-cli/releases/download/v1.40.9/stripe_1.40.9_mac-os_x86_64.tar.gz";
-      sha256 = "f3131b07918b5d3237c7474ff91b326b1852a8dc9eb5869819337201bd0b4eb4";
+      url = "https://github.com/stripe/stripe-cli/releases/download/v1.55.14/stripe_1.55.14_mac-os_x86_64.tar.gz";
+      sha256 = "be2f54c652b14f7d0c0c38771bd163ddc6e1cbe1778b0eb0516b94ef876c33af";
     };
   };
 in
 stdenvNoCC.mkDerivation {
   pname = "stripe-cli";
-  version = "1.40.9";
+  version = "1.55.14";
 
   src = fetchurl sources.${stdenvNoCC.hostPlatform.system};
   sourceRoot = ".";

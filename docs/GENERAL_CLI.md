@@ -9,12 +9,12 @@ Azure CLIとTerraformは不要になったため、導入対象から外す。
 
 | CLI | 固定バージョン | 定義 |
 | --- | --- | --- |
-| rtk | 0.43.0 | `tools.yaml` の `ai.devbox` |
-| chezmoi | 2.69.3 | `tools.yaml` の `shell-and-terminal.devbox` |
-| mo | 1.6.7 | nix/packages/mo.nix |
-| Stripe CLI | 1.40.9 | nix/packages/stripe.nix |
-| Microsoft APM | 0.16.1 | nix/packages/apm.nix |
-| Google Cloud CLI | 559.0.0 | nix/packages/gcloud.nix |
+| rtk | 1.2.0 | `tools.yaml` の `ai.devbox` |
+| chezmoi | 2.74.1 | `tools.yaml` の `shell-and-terminal.devbox` |
+| mo | 1.8.2 | nix/packages/mo.nix |
+| Stripe CLI | 1.55.14 | nix/packages/stripe.nix |
+| Microsoft APM | 0.37.0 | nix/packages/apm.nix |
+| Google Cloud CLI | 594.0.0 | nix/packages/gcloud.nix |
 
 カテゴリ別の定義は [`home/.chezmoidata/tools.yaml`](../home/.chezmoidata/tools.yaml) にある。
 独自 Nix 定義は `home/dot_local/share/devbox/global/default/nix/` にある。

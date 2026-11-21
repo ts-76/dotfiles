@@ -7,26 +7,26 @@
 let
   sources = {
     aarch64-darwin = {
-      url = "https://github.com/k1LoW/mo/releases/download/v1.6.7/mo_v1.6.7_darwin_arm64.zip";
-      sha256 = "83c0efa272b3044c8189f6ffb74bc6ecb20e3d9299eed476e63ee72d149643f4";
+      url = "https://github.com/k1LoW/mo/releases/download/v1.8.2/mo_v1.8.2_darwin_arm64.zip";
+      sha256 = "4c2968a9ab02f3687ea81961085c106f232a2c63ba5088ec819b3955a1424c5e";
     };
     x86_64-darwin = {
-      url = "https://github.com/k1LoW/mo/releases/download/v1.6.7/mo_v1.6.7_darwin_amd64.zip";
-      sha256 = "376cb36b3e3b4e0075fa7f0b37685d9df9b56d4bd80e2d99596ab8e5a46932f6";
+      url = "https://github.com/k1LoW/mo/releases/download/v1.8.2/mo_v1.8.2_darwin_amd64.zip";
+      sha256 = "d833f1e5450a8e5cce383c371c1b9b268baddd2cdc0ca32cb6eb765d0272e0b3";
     };
     aarch64-linux = {
-      url = "https://github.com/k1LoW/mo/releases/download/v1.6.7/mo_v1.6.7_linux_arm64.tar.gz";
-      sha256 = "90b3fc49d38d73d5acc9b1ac6d1a992ffba5bf4d12787c2e645411af2993b8ce";
+      url = "https://github.com/k1LoW/mo/releases/download/v1.8.2/mo_v1.8.2_linux_arm64.tar.gz";
+      sha256 = "49eef17ba90bf8cbd8ed65c36955d5a7f5572b372bbf0ee1a3f51e2fbec34781";
     };
     x86_64-linux = {
-      url = "https://github.com/k1LoW/mo/releases/download/v1.6.7/mo_v1.6.7_linux_amd64.tar.gz";
-      sha256 = "130666a7c8dfd1528d07f87b21adf5bfc1314707889e85ebbab1a5248d7ded11";
+      url = "https://github.com/k1LoW/mo/releases/download/v1.8.2/mo_v1.8.2_linux_amd64.tar.gz";
+      sha256 = "3b8a35b89c41df05a5769b3b7fb13e3ffef358c5e990e89520487218a268fcf1";
     };
   };
 in
 stdenvNoCC.mkDerivation {
   pname = "mo-markdown";
-  version = "1.6.7";
+  version = "1.8.2";
 
   src = fetchurl sources.${stdenvNoCC.hostPlatform.system};
   sourceRoot = ".";
