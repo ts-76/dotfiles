@@ -1,0 +1,60 @@
+name: dotfiles-agent-skills
+version: 1.0.0
+targets:
+  - agent-skills
+  - claude
+dependencies:
+  apm:
+    - cloudflare/skills/skills/agents-sdk#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/cloudflare#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/cloudflare-email-service#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/durable-objects#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/sandbox-sdk#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/turnstile-spin#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/web-perf#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/workers-best-practices#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - cloudflare/skills/skills/wrangler#12520fd63a1e958be217a93f48ce1f04bc9055f3
+    - coji/natural-japanese/skills/natural-japanese#c2ad5da4e4f9a29a84a0a9e74d93b6ce921d22d3
+    - emilkowalski/skill/skills/animate#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/animate-expo#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/animation-performance#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/animation-vocabulary#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/apple-design#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/ask-sonner#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/break-ui#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/emil-design-eng#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/find-animation-opportunities#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/improve-animations#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/mobile-native#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/pick-ui-library#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/prototype#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/review-animations#2d228630ba1446365f614a108cb8252f1feda202
+    - emilkowalski/skill/skills/write-swift#2d228630ba1446365f614a108cb8252f1feda202
+    - git: makenotion/claude-code-notion-plugin
+      path: skills/notion/knowledge-capture
+      ref: 9847f2aa1a15f25df35ed1fb7b4557dbb60cd651
+      alias: notion-knowledge-capture
+    - git: makenotion/claude-code-notion-plugin
+      path: skills/notion/meeting-intelligence
+      ref: 9847f2aa1a15f25df35ed1fb7b4557dbb60cd651
+      alias: notion-meeting-intelligence
+    - git: makenotion/claude-code-notion-plugin
+      path: skills/notion/research-documentation
+      ref: 9847f2aa1a15f25df35ed1fb7b4557dbb60cd651
+      alias: notion-research-documentation
+    - git: makenotion/claude-code-notion-plugin
+      path: skills/notion/spec-to-implementation
+      ref: 9847f2aa1a15f25df35ed1fb7b4557dbb60cd651
+      alias: notion-spec-to-implementation
+    # v3.1.0から、スキルの配下にあったCodexプラグイン設定が除かれた。
+    - nanaism/yomiyasu/skills/yomiyasu#db78b9bc5e868549b517a037df7a4d1c93edac23
+    - pbakaus/impeccable/.agents/skills/impeccable#cd12f8660e2dde57b9615c8a6b8ea674101f9cfc
+    - stablyai/orca/skills/computer-use#da6d483ab9aae8aa81eaf773bcf0fda9fc4e3495
+    - stablyai/orca/skills/orca-cli#da6d483ab9aae8aa81eaf773bcf0fda9fc4e3495
+    - stablyai/orca/skills/orchestration#da6d483ab9aae8aa81eaf773bcf0fda9fc4e3495
+    - git: ts-76/bun-webview
+      path: skills
+      ref: 1bc6d1daf772be18275d075580e4f7cccb16d917
+      alias: bun-webview
+    - vercel-labs/skills/skills/find-skills#7c0a9af3f8738965b71341712710ac7371089b34
+    - yusukebe/hono-skill/skills/hono#0d2e8dc6fa7e9c6e1c872abdb65db422e95e9de0

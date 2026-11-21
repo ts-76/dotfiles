@@ -46,6 +46,10 @@ graphify --help
 command -v node bun pnpm vp spf
 ```
 
+## グローバルのエージェントスキル
+
+GitHub から導入するスキルは APM で管理します。chezmoi が APM の設定とロックファイルをホームに配置します。新しい端末への復元、既存環境からの移行、更新は [グローバルスキルの運用手順](docs/AGENT_SKILLS.md) を参照してください。
+
 ## 既存環境を移行する
 
 既存のBun/npmの導入先は、Vite Plus側の導入と起動確認が済むまで残してください。
