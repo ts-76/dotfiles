@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+# installer {{ include "dot_local/bin/executable_dot-t3-install" | sha256sum }}
+
+"$HOME/.local/bin/dot-t3-install"

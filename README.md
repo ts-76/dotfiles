@@ -26,7 +26,7 @@ chezmoi init --apply https://github.com/ts-76/dotfiles.git
 exec zsh
 ```
 
-`chezmoi apply` は設定ファイルを配置し、変更された定義に応じてDevboxとVite Plusの導入処理を実行します。Cursor CLIも未導入なら自動で導入します。Graphifyは上記の専用スクリプトで導入してください。
+`chezmoi apply` は設定ファイルを配置し、変更された定義に応じてDevboxとVite Plusの導入処理を実行します。Cursor CLIとT3 Code CLIの導入も扱います。Graphifyは上記の専用スクリプトで導入してください。
 
 Vite+ のグローバル CLI `vp` は、[nix-vite-plus](https://github.com/ryoppippi/nix-vite-plus) の Nix flake を Devbox から導入します。現在の flake は Apple Silicon の macOS、x86_64 と aarch64 の Linux に対応しています。WSL2 は Linux として扱います。更新には `devbox global update` を使います。
 
@@ -66,7 +66,7 @@ CLI の追加・更新は `tools.yaml` の用途別カテゴリで行います�
 
 | カテゴリ | 主なツール | 専用の導入手順・設定 |
 | --- | --- | --- |
-| AI・エージェント開発 (`ai`) | Claude Code、Codex、MastraCode、APM、RTK | [Cursor CLI](#cursor-cli)、[Graphify](#graphify) |
+| AI・エージェント開発 (`ai`) | Claude Code、Codex、MastraCode、APM、RTK | [Cursor CLI](#cursor-cli)、[T3 Code CLI](#t3-code-cli)、[Graphify](#graphify) |
 | ブラウザ操作・Web 取得 (`browser`) | agent-browser、ax | |
 | クラウド・外部サービス (`cloud`) | Google Cloud CLI、Stripe CLI、Wrangler、cf | |
 | データ処理 (`data`) | jq、yq、xq | |
@@ -118,6 +118,17 @@ agent
 ```
 
 インストーラーはダウンロード完了後に実行します。認証情報はdotfilesの管理対象に含めません。
+
+### T3 Code CLI
+
+初回の `chezmoi apply` と導入スクリプトを変更したときに、Apple Silicon Mac と x86_64・ARM64 の Linux（WSL2 を含む）へ `t3` を導入します。[導入スクリプト](home/dot_local/bin/executable_dot-t3-install)で公式リリースの版を固定し、同じ版が入っていればそのまま使います。再導入は `~/.local/bin/dot-t3-install` で行えます。
+
+```bash
+t3 --version
+t3 connect status
+```
+
+同じ端末でデスクトップ版を開いている場合は、`t3 app` で現在のディレクトリを T3 Code で開けます。別の端末から接続するには、デスクトップ版の **Settings → Sharing & access** で T3 Connect にサインインします。CLI をバックグラウンドサービスとして使う場合は、ホストで `t3 connect` を実行します。認証と接続設定は端末ごとに T3 Code が保持します。 [公式の導入手順](https://github.com/pingdotgg/t3code/blob/v0.1.11/docs/user/install.md) · [T3 Connect の設定](https://github.com/pingdotgg/t3code/blob/v0.1.11/docs/user/remote-access.md)
 
 ### Graphify
 

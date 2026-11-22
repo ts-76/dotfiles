@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+
+version=0.1.11
+platform="$(uname -s):$(uname -m)"
+case "$platform" in
+  Darwin:arm64 | Linux:x86_64 | Linux:aarch64) ;;
+  *) printf 'Skipping T3 Code CLI installation on %s.\n' "$platform"; exit 0 ;;
+esac
+
+launcher="${T3CODE_INSTALL_BIN_DIR:-$HOME/.local/bin}/t3"
+if [ -x "$launcher" ] && [ "$("$launcher" --version 2>/dev/null)" = "t3 v$version" ]; then
+  exit 0
+fi
+
+installer="$(mktemp)"
+trap 'rm -f "$installer"' EXIT
+curl -fsSL "https://raw.githubusercontent.com/pingdotgg/t3code/v$version/scripts/install.sh" -o "$installer"
+T3CODE_VERSION="$version" sh "$installer"
+installed_version="$("$launcher" --version)"
+if [ "$installed_version" != "t3 v$version" ]; then
+  printf 'Expected t3 v%s, got %s.\n' "$version" "$installed_version" >&2
+  exit 1
+fi
