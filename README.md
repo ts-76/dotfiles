@@ -66,7 +66,7 @@ CLI の追加・更新は `tools.yaml` の用途別カテゴリで行います�
 
 | カテゴリ | 主なツール | 専用の導入手順・設定 |
 | --- | --- | --- |
-| AI・エージェント開発 (`ai`) | Claude Code、Codex、MastraCode、APM、RTK | [Cursor CLI](#cursor-cli)、[T3 Code CLI](#t3-code-cli)、[Graphify](#graphify) |
+| AI・エージェント開発 (`ai`) | Claude Code、Codex、MastraCode、APM | [Cursor CLI](#cursor-cli)、[T3 Code CLI](#t3-code-cli)、[Graphify](#graphify) |
 | ブラウザ操作・Web 取得 (`browser`) | agent-browser、ax | |
 | クラウド・外部サービス (`cloud`) | Google Cloud CLI、Stripe CLI、Wrangler、cf | |
 | データ処理 (`data`) | jq、yq、xq | |
@@ -74,7 +74,7 @@ CLI の追加・更新は `tools.yaml` の用途別カテゴリで行います�
 | エディタ・ファイル・検索 (`editor-and-files`) | Helix、superfile、mo、ripgrep、ast-grep、fd、fzf、eza、bat | [キーバインド](docs/KEYBINDINGS.md) |
 | Git・課題管理 (`git`) | gh、glab、ghq、prek、bd | [Git・GitHub の設定](docs/CREDENTIALS_SETUP.md)、[SSH の設定](docs/CREDENTIALS_SSH_SETUP.md) |
 | 認証 (`security`) | 1Password CLI (`op`) | |
-| シェル・ターミナル (`shell-and-terminal`) | chezmoi、direnv、zoxide、Powerlevel10k | [Zsh・Bash・Ghostty の設定](#設定ファイル) |
+| シェル・ターミナル (`shell-and-terminal`) | direnv、zoxide、Powerlevel10k | [Zsh・Bash・Ghostty の設定](#設定ファイル) |
 
 ### Devbox
 

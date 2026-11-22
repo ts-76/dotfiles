@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--bin-dir", type=Path, default=Path.home() / ".local/share/devbox/global/default/.devbox/nix/profile/default/bin")
 parser.add_argument("--receipt", type=Path)
 args = parser.parse_args()
-versions = {"rtk": "1.2.0", "chezmoi": "2.74.1", "mo": "1.8.2", "stripe": "1.55.14", "apm": "0.37.0", "gcloud": "594.0.0"}
+versions = {"mo": "1.8.2", "stripe": "1.55.14", "apm": "0.37.0", "gcloud": "594.0.0"}
 receipt = {"bin_dir": str(args.bin_dir), "commands": []}
 
 with tempfile.TemporaryDirectory(prefix="general-cli-smoke-") as temporary:

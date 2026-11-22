@@ -86,8 +86,8 @@ dotfilesの管理元で`python3 tools/vite-plus/test_reconcile.py`を実行す�
 
 ## bdを導入する
 
-`bd 1.3.4` は Devbox から Nixpkgs の `beads` を使って導入する。
-`tools.yaml` の `git` カテゴリでパッケージのバージョンを固定する。Apple Silicon 版は Devbox のパッケージ索引で解決し、Nix の公式バイナリキャッシュから取得する。
+`bd` は Devbox から `github:gastownhall/beads/7ef2fd05eb0cd3bdbde051f93cfc14ccf270cdde#bd` を導入する。現在の導入結果は 1.3.4。
+`tools.yaml` の `git` カテゴリでこの flake 参照を固定する。
 
 ## 起動リンクが切れた場合
 

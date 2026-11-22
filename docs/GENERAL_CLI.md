@@ -9,8 +9,7 @@ Azure CLIとTerraformは不要になったため、導入対象から外す。
 
 | CLI | 固定バージョン | 定義 |
 | --- | --- | --- |
-| rtk | 1.2.0 | `tools.yaml` の `ai.devbox` |
-| chezmoi | 2.74.1 | `tools.yaml` の `shell-and-terminal.devbox` |
+| direnv | 2.37.1 | `tools.yaml` の `shell-and-terminal.devbox` |
 | mo | 1.8.2 | nix/packages/mo.nix |
 | Stripe CLI | 1.55.14 | nix/packages/stripe.nix |
 | Microsoft APM | 0.37.0 | nix/packages/apm.nix |
@@ -29,6 +28,7 @@ Google Cloud CLIはNixのPythonを使用し、HomebrewやuvのPythonへ依存し
 SDKのcore、alpha、bq、gsutil、gcloud-crc32cを維持する。
 
 GhosttyとsbxはHomebrewで管理する。
+chezmoiはDevboxの対象外で、dotfilesを適用する前に導入する。
 
 ## 変更を適用する
 
@@ -57,9 +57,9 @@ dotfilesの管理元で次を実行する。
 python3 tools/devbox/verify_general_cli.py
 ```
 
-6つのCLIのバージョンと、bq、gsutil、alpha、5つのSDKコンポーネントを確認する。
+4つのCLIのバージョンと、bq、gsutil、alpha、5つのSDKコンポーネントを確認する。
 検証用の一時設定を使うため、実際のGoogle Cloud・Stripeの認証情報は使わない。
 テスト時のPATHからHomebrewを外し、隠れた依存がないことも確認する。
 
 新端末では、Nix、Devbox、chezmoiの順に初期導入してからdotfilesを適用する。
-シェルを再起動し、`command -v rtk chezmoi mo stripe apm gcloud`でDevboxの実行ファイルが選ばれることを確認する。
+シェルを再起動し、`command -v mo stripe apm gcloud`でDevboxの実行ファイルが選ばれることを確認する。

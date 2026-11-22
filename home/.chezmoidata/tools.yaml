@@ -1,8 +1,6 @@
 # カテゴリごとに、導入元別のパッケージとバージョンを定義する。
 toolCategories:
   ai:
-    devbox:
-      rtk: "1.2.0"
     devboxLocal:
       apm: [aarch64-darwin]
     vitePlus:
@@ -76,7 +74,7 @@ toolCategories:
       glab: latest
       ghq: latest
       prek: latest
-      beads: "1.3.4"
+      "github:gastownhall/beads/7ef2fd05eb0cd3bdbde051f93cfc14ccf270cdde#bd": ""
 
   security:
     devbox:
@@ -84,7 +82,6 @@ toolCategories:
 
   shell-and-terminal:
     devbox:
-      chezmoi: "2.74.1"
-      direnv: "2.38.2"
+      direnv: "2.37.1"
       zoxide: latest
       zsh-powerlevel10k: latest
