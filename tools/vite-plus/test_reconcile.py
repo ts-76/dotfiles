@@ -181,6 +181,22 @@ class ReconcileTests(unittest.TestCase):
         installs = [args for args in self.calls() if args[:2] == ["install", "-g"]]
         self.assertEqual(len(installs), 1)
 
+    def test_stale_nix_shim_is_retargeted_before_collection(self):
+        self.assertEqual(self.run_script().returncode, 0)
+        old_wrapper = self.root / "old-vite-plus/bin/.vp-wrapped"
+        new_wrapper = self.root / "new-vite-plus/bin/.vp-wrapped"
+        for wrapper in [old_wrapper, new_wrapper]:
+            wrapper.parent.mkdir(parents=True)
+            wrapper.write_text("#!/bin/sh\nexit 0\n")
+            wrapper.chmod(0o755)
+        binary = self.root / "bin/test-cli"
+        binary.unlink()
+        binary.symlink_to(old_wrapper)
+        (self.root / "bin/vpx").symlink_to(new_wrapper)
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(os.readlink(binary), str(new_wrapper))
+
     def test_node_change_reinstalls(self):
         self.assertEqual(self.run_script().returncode, 0)
         self.desired["packages"][0]["node"] = "22.20.0"

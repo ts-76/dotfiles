@@ -58,14 +58,17 @@ if [ "$mode" = apply ]; then
     "$vp_command" env install "$name@$version"
   done < <(jq -r '.defaultPackageManagerVersions | to_entries[] | [.key, .value] | @tsv' "$config")
   "$vp_command" env setup --refresh
-  # Nix upgrades can leave dangling shims that setup --refresh does not replace.
+  # setup --refresh leaves shims pointing at the previous Nix store path, which breaks once it is garbage-collected.
   shim_dir="${VP_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/vite-plus}/bin"
   refreshed_target="$(readlink "$shim_dir/vpx" 2>/dev/null || true)"
   if [ -x "$refreshed_target" ]; then
     for shim in "$shim_dir"/*; do
-      if [ -L "$shim" ] && [ ! -e "$shim" ]; then
-        case "$(readlink "$shim")" in
-          /nix/store/*/bin/.vp-wrapped) ln -sf "$refreshed_target" "$shim" ;;
+      if [ -L "$shim" ]; then
+        target="$(readlink "$shim")"
+        case "$target" in
+          */bin/.vp-wrapped)
+            [ "$target" = "$refreshed_target" ] || ln -sf "$refreshed_target" "$shim"
+            ;;
         esac
       fi
     done

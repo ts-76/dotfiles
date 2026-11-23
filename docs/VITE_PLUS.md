@@ -92,7 +92,8 @@ dotfilesの管理元で`python3 tools/vite-plus/test_reconcile.py`を実行す�
 ## 起動リンクが切れた場合
 
 Nixの旧ストアを参照するリンクが残ると、パッケージ本体が存在していても起動できない。
-`vp-tools`はshimを生成した後、旧Nixストアへのリンク切れを修復する。
+`vp env setup --refresh`は一部のshimしか張り替えず、残りは旧Nixストアを参照したまま、GCで削除された時点で切れる。
+`vp-tools`はshimを生成した後、旧ストアを参照するshimを、切れる前のものも含めて新しい本体へ張り替える。
 `vp`の入口はDevboxのプロファイルを参照させ、本体の管理をDevboxに揃える。
 `vp upgrade`で別の本体を導入せず、更新は`devbox global update`、続いて`vp-tools`を実行する。
 
