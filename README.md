@@ -130,6 +130,12 @@ t3 connect status
 
 同じ端末でデスクトップ版を開いている場合は、`t3 app` で現在のディレクトリを T3 Code で開けます。別の端末から接続するには、デスクトップ版の **Settings → Sharing & access** で T3 Connect にサインインします。CLI をバックグラウンドサービスとして使う場合は、ホストで `t3 connect` を実行します。認証と接続設定は端末ごとに T3 Code が保持します。 [公式の導入手順](https://github.com/pingdotgg/t3code/blob/v0.1.11/docs/user/install.md) · [T3 Connect の設定](https://github.com/pingdotgg/t3code/blob/v0.1.11/docs/user/remote-access.md)
 
+この dotfiles は、シェルの初期化ファイルとバックグラウンドサービスの `~/.t3/service.env` にテレメトリーの無効化を設定します。デスクトップ版とサーバーでは、`T3CODE_TELEMETRY_ENABLED=false` で利用データと T3 Connect の接続トレースの送信を、`T3CODE_OTEL_SDK_DISABLED=true` で OpenTelemetry の診断データの送信を停止します。 [テレメトリーの公式資料](https://github.com/pingdotgg/t3code/blob/v0.1.11/docs/user/telemetry.md) · [OpenTelemetry の無効化](https://github.com/pingdotgg/t3code/blob/v0.1.11/docs/operations/observability.md#the-kill-switch)
+
+chezmoi で反映したあと、デスクトップ版は終了して開き直し、バックグラウンドサービスは `t3 service restart` で再起動してください。 [サービスの環境変数](https://github.com/pingdotgg/t3code/blob/v0.1.11/docs/user/background-service.md#configure-the-service-environment)
+
+Zsh と Bash では `T3CODE_NO_BROWSER=true` を設定し、`t3` の起動時に Web 版が自動で開くのを止めます。設定は chezmoi で反映したあとの新しいシェルで有効になります。 [CLI の設定](https://github.com/pingdotgg/t3code/blob/v0.1.11/apps/server/src/cli/config.test.ts#L411-L485)
+
 ### Graphify
 
 [`home/dot_local/bin/executable_dot-graphify-install`](home/dot_local/bin/executable_dot-graphify-install) を `~/.local/bin/dot-graphify-install` として配置します。このスクリプトは `uv tool` で公式パッケージ `graphifyy==0.9.114` を Python 3.12 の環境に導入します。Python 3.12 がない場合は `uv` が取得します。起動コマンドは `graphify` です。

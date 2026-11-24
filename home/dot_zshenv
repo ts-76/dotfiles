@@ -1,4 +1,7 @@
 export GRAPHIFY_QUERY_LOG_DISABLE=1
+export T3CODE_TELEMETRY_ENABLED=false
+export T3CODE_OTEL_SDK_DISABLED=true
+export T3CODE_NO_BROWSER=true
 
 # Shell profiles and PATH are managed by chezmoi and Devbox.
 export VP_SELF_SETUP_NO_MODIFY_PATH=1

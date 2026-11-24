@@ -2,7 +2,11 @@
 # Bash エントリーポイント (~/.bashrc)
 # =============================================================================
 
-# 非対話シェルでは何もしない
+export T3CODE_TELEMETRY_ENABLED=false
+export T3CODE_OTEL_SDK_DISABLED=true
+export T3CODE_NO_BROWSER=true
+
+# 非対話シェルではここで終了
 case $- in
   *i*) ;;
   *) return ;;
